@@ -1,11 +1,10 @@
--- Drop Database if exist and not in use
+-- Drop Database if exists and not in use
 IF EXISTS (SELECT name FROM sys.databases WHERE name = N'DGA_ProductDB')
 BEGIN
     ALTER DATABASE DGA_ProductDB SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
     DROP DATABASE DGA_ProductDB;
 END
 GO
-
 
 -- Create new Database
 CREATE DATABASE DGA_ProductDB;
@@ -15,175 +14,243 @@ GO
 USE DGA_ProductDB;
 GO
 
-
 ------------ TABLES ------------
 
-
------ LOOK UP TABLES -----
+-- ========================
+-- 🟦 LOOKUP-TABELLER
+-- ========================
 CREATE TABLE Country (
-    CountryID INT PRIMARY KEY,
+    CountryID INT IDENTITY(1,1) PRIMARY KEY,
     CountryCode CHAR(2) NOT NULL,
     CountryName NVARCHAR(100) NOT NULL
 );
 GO
 
 CREATE TABLE ColorGroup (
-    ColorGroupID INT PRIMARY KEY,
-    ColorGroupName VARCHAR(100)
+    ColorGroupID INT IDENTITY(1,1) PRIMARY KEY,
+    ColorGroupName NVARCHAR(100)
 );
 GO 
 
 CREATE TABLE Pantone (
-    PantoneID INT PRIMARY KEY,
-    ColorCode VARCHAR(50) NOT NULL,
-    ColorName VARCHAR(50) 
+    PantoneID INT IDENTITY(1,1) PRIMARY KEY,
+    ColorCode NVARCHAR(50) NOT NULL,
+    ColorName NVARCHAR(50)
 );
 GO
 
 CREATE TABLE Certification (
-    CertificationID INT PRIMARY KEY,
-    CertificationType NVARCHAR(50) NOT NULL, 
-    CertificationDescription NVARCHAR(255)
+    CertificationID INT IDENTITY(1,1) PRIMARY KEY,
+    CertificationType NVARCHAR(100) NOT NULL,
+    Description VARCHAR(MAX)
 );
 GO
 
------ ENTITY TABLES -----
+-- ========================
+-- 🟡 ENTITETSTABELLER
+-- ========================
 CREATE TABLE Designer (
-    DesignerID INT PRIMARY KEY,
+    DesignerID INT IDENTITY(1,1) PRIMARY KEY,
     DesignerName NVARCHAR(100) NOT NULL
 );
 GO
 
-___________________
-
-CREATE TABLE dbo.Country (
-    CountryID int NOT NULL,
-    CountryCode char(2) NOT NULL,
-    CountryName nvarchar(100) NOT NULL
+CREATE TABLE [Group] (
+    GroupID INT IDENTITY(1,1) PRIMARY KEY,
+    SupplierID INT,
+    GroupDescription NVARCHAR(250)
 );
+GO
 
-CREATE TABLE dbo.ColorGroup (
-    ColorGroupID int NOT NULL,
-    ColorGroupName varchar(100) NULL
+CREATE TABLE Supplier (
+    SupplierID INT IDENTITY(1,1) PRIMARY KEY,
+    ProductID INT,
+    GroupID INT,
+    SupplierNo INT,
+    Name NVARCHAR(200)
 );
+GO
 
-CREATE TABLE dbo.Pantone (
-    PantoneID int NOT NULL,
-    ColorCode varchar(50) NOT NULL,
-    ColorName varchar(50) NULL
+CREATE TABLE Product (
+    ProductID INT IDENTITY(1,1) PRIMARY KEY,
+    SupplierID INT,
+    CountryID INT,
+    DesignerID INT,
+    ColorGroupID INT,
+    CreatedDate DATE,
+    ModifiedDate DATE,
+    SetupStage DATE,
+    HasBeenApproved BIT
 );
+GO
 
-CREATE TABLE dbo.Certification (
-    CertificationID int NOT NULL,
-    CertificationType nvarchar(50) NOT NULL,
-    CertificationDescription nvarchar(255) NULL
+CREATE TABLE ProductCategory (
+    ProductID INT PRIMARY KEY,
+    MainGroup NVARCHAR(100),
+    MainCategory NVARCHAR(100),
+    SubCategory NVARCHAR(100)
 );
+GO
 
-CREATE TABLE dbo.Designer (
-    DesignerID int NOT NULL,
-    DesignerName nvarchar(100) NOT NULL
+CREATE TABLE ProductDetails (
+    ProductID INT PRIMARY KEY,
+    DGAItemNo NVARCHAR(50),
+    ProductLogo NVARCHAR(50),
+    Series NVARCHAR(100),
+    ProductDescription VARCHAR(MAX),
+    ProductDescriptionFree VARCHAR(MAX),
+    MOQ INT,
+    CostPrice DECIMAL(10,2),
+    CustomerClearanceNo INT,
+    CustomerClearencePercent DECIMAL(5,2),
+    Unit NVARCHAR(10),
+    UnitPCS INT,
+    ABC CHAR(1),
+    Assorted NVARCHAR(20),
+    EANCodes NVARCHAR(13),
+    PictureGroup INT,
+    HangtagsAndStickers NVARCHAR(100),
+    SupplierProductNo NVARCHAR(50),
+    BurningTimeHours DECIMAL(5,2),
+    Material NVARCHAR(100),
+    AdditionalInfo VARCHAR(MAX)
 );
+GO
 
-CREATE TABLE dbo.Supplier (
-    SupplierID int NOT NULL,
-    ProductID int NULL,
-    GroupID int NULL,
-    SupplierNo int NULL,
-    Name varchar(200) NULL
+CREATE TABLE Picture (
+    PictureID INT IDENTITY(1,1) PRIMARY KEY,
+    ProductID INT,
+    Data VARBINARY(MAX),
+    DataType NVARCHAR(100)
 );
+GO
 
-CREATE TABLE dbo.Group (
-    GroupID int NOT NULL,
-    GroupDescription varchar(250) NULL,
-    SupplierID int NULL
+CREATE TABLE ProductDimensions (
+    ProductDID INT IDENTITY(1,1) PRIMARY KEY,
+    ProductID INT,
+    HeightCM DECIMAL(10,2),
+    WidthCM DECIMAL(10,2),
+    DepthCM DECIMAL(10,2),
+    DiameterCM DECIMAL(10,2),
+    NetWeightKG DECIMAL(10,2),
+    GsmWeight DECIMAL(10,2)
 );
+GO
 
-CREATE TABLE dbo.ProductCategory (
-    ProductID int NOT NULL,
-    MainGroup varchar(100) NULL,
-    MainCategory varchar(100) NULL,
-    SubCategory varchar(100) NULL
+CREATE TABLE ProductPackageDimensions (
+    ProductPDID INT IDENTITY(1,1) PRIMARY KEY,
+    ProductID INT,
+    GrossWeightKG DECIMAL(10,2),
+    CBM DECIMAL(10,2),
+    PackagingHeightCM DECIMAL(10,2),
+    PackagingWidthCM DECIMAL(10,2),
+    PackagingDepthCM DECIMAL(10,2),
+    KIHeightCM DECIMAL(10,2),
+    KIWidthCM DECIMAL(10,2),
+    KIDepthCM DECIMAL(10,2),
+    KYHeightCM DECIMAL(10,2),
+    KYWidthCM DECIMAL(10,2),
+    KYDepthCM DECIMAL(10,2),
+    PackingDepthCM DECIMAL(10,2),
+    InnerCarton INT,
+    OuterCarton INT
 );
+GO
 
-CREATE TABLE dbo.Picture (
-    PictureID int NOT NULL,
-    ProductID int NULL,
-    Name varchar(100) NULL,
-    DataType varchar(100) NULL
+CREATE TABLE FoodContactMaterial (
+    FCMID INT IDENTITY(1,1) PRIMARY KEY,
+    ProductID INT NOT NULL,
+    PlasticMaterial BIT,
+    IonisingRadiation BIT,
+    RecycledPlastic BIT,
+    ActiveIntelligentMaterial BIT,
+    FunctionalBarrier BIT,
+    DualUse BIT,
+    MultipleApplied BIT,
+    FCMDeclarationProvided BIT,
+    TestReportAvailable BIT,
+    GMP_Certified BIT,
+    EUFoodContactCompliant BIT
 );
+GO
 
-CREATE TABLE dbo.ProductDimensions (
-    ProductDID int NOT NULL,
-    ProductID int NULL,
-    HeightCM decimal(18,0) NULL,
-    WidthCM decimal(18,0) NULL,
-    DepthCM decimal(18,0) NULL,
-    DiameterCM decimal(18,0) NULL,
-    NetWeightKG decimal(18,0) NULL,
-    GsmWeight decimal(18,0) NULL
+-- ========================
+-- 🟩 RELATIONSTABELLER
+-- ========================
+CREATE TABLE ProductCertification (
+    ProductID INT NOT NULL,
+    CertificateID INT NOT NULL,
+    ValidUntil DATE,
+    PRIMARY KEY (ProductID, CertificateID)
 );
+GO
 
-CREATE TABLE dbo.ProductPackageDimensions (
-    ProductPDID int NOT NULL,
-    ProductID int NULL,
-    GrossWeightKG decimal(18,0) NULL,
-    CBM decimal(18,0) NULL,
-    PackagingHeightCM decimal(18,0) NULL,
-    PackagingWidthCM decimal(18,0) NULL,
-    PackagingDepthCM decimal(18,0) NULL,
-    KIHeightCM decimal(18,0) NULL,
-    KIWidthCM decimal(18,0) NULL,
-    KIDepthCM decimal(18,0) NULL,
-    KYHeightCM decimal(18,0) NULL,
-    KYWidthCM decimal(18,0) NULL,
-    KYDepthCM decimal(18,0) NULL,
-    PackingDepthCM decimal(18,0) NULL,
-    InnerCarton int NULL,
-    OuterCarton int NULL
+CREATE TABLE ProductPantone (
+    ProductID INT NOT NULL,
+    PantoneID INT NOT NULL,
+    PRIMARY KEY (ProductID, PantoneID)
 );
+GO
 
-CREATE TABLE dbo.ProductCertification (
-    ProductID int NOT NULL,
-    CertificateID int NOT NULL,
-    ValidUntil date NULL
-);
+-- ========================
+-- FOREIGN KEYS
+-- ========================
 
-CREATE TABLE dbo.ProductPantone (
-    ProductID int NOT NULL,
-    PantoneID int NOT NULL
-);
+-- Product
+ALTER TABLE Product
+ADD CONSTRAINT FK_Product_Supplier FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID),
+    CONSTRAINT FK_Product_Country FOREIGN KEY (CountryID) REFERENCES Country(CountryID),
+    CONSTRAINT FK_Product_Designer FOREIGN KEY (DesignerID) REFERENCES Designer(DesignerID),
+    CONSTRAINT FK_Product_ColorGroup FOREIGN KEY (ColorGroupID) REFERENCES ColorGroup(ColorGroupID);
+GO
 
-CREATE TABLE dbo.Product (
-    ProductID int NOT NULL,
-    SupplierID int NULL,
-    CountryID int NULL,
-    DesignerID int NULL,
-    ColorGroupID int NULL,
-    ModifiedDate date NULL,
-    SetupStage date NULL,
-    HasBeenApproved bit NULL
-);
+-- ProductDetails
+ALTER TABLE ProductDetails
+ADD CONSTRAINT FK_ProductDetails_Product FOREIGN KEY (ProductID) REFERENCES Product(ProductID);
+GO
 
-CREATE TABLE dbo.ProductDetails (
-    ProductID int NOT NULL,
-    DGAItemNo varchar(50) NULL,
-    ProductLogo varchar(50) NULL,
-    Series varchar(100) NULL,
-    ProductDescription text NULL,
-    ProductDescriptionFree text NULL,
-    MOQ int NULL,
-    CostPrice decimal(10,2) NULL,
-    CustomerClearanceNo int NULL,
-    CustomerClearencePercent decimal(5,2) NULL,
-    Unit varchar(10) NULL,
-    UnitPCS int NULL,
-    ABC char(1) NULL,
-    Assorted varchar(20) NULL,
-    EANCodes varchar(13) NULL,
-    PictureGroup int NULL,
-    HangtagsAndStickers varchar(100) NULL,
-    SupplierProductNo varchar(50) NULL,
-    BurningTimeHours decimal(5,2) NULL,
-    Material varchar(100) NULL,
-    AdditionalInfo text NULL
-);
+-- ProductCategory
+ALTER TABLE ProductCategory
+ADD CONSTRAINT FK_ProductCategory_Product FOREIGN KEY (ProductID) REFERENCES Product(ProductID);
+GO
+
+-- Picture
+ALTER TABLE Picture
+ADD CONSTRAINT FK_Picture_Product FOREIGN KEY (ProductID) REFERENCES Product(ProductID);
+GO
+
+-- ProductDimensions
+ALTER TABLE ProductDimensions
+ADD CONSTRAINT FK_ProductDimensions_Product FOREIGN KEY (ProductID) REFERENCES Product(ProductID);
+GO
+
+-- ProductPackageDimensions
+ALTER TABLE ProductPackageDimensions
+ADD CONSTRAINT FK_ProductPackageDimensions_Product FOREIGN KEY (ProductID) REFERENCES Product(ProductID);
+GO
+
+-- ProductCertification
+ALTER TABLE ProductCertification
+ADD CONSTRAINT FK_ProductCertification_Product FOREIGN KEY (ProductID) REFERENCES Product(ProductID),
+    CONSTRAINT FK_ProductCertification_Certification FOREIGN KEY (CertificateID) REFERENCES Certification(CertificationID);
+GO
+
+-- ProductPantone
+ALTER TABLE ProductPantone
+ADD CONSTRAINT FK_ProductPantone_Product FOREIGN KEY (ProductID) REFERENCES Product(ProductID),
+    CONSTRAINT FK_ProductPantone_Pantone FOREIGN KEY (PantoneID) REFERENCES Pantone(PantoneID);
+GO
+
+-- FoodContactMaterial
+ALTER TABLE FoodContactMaterial
+ADD CONSTRAINT FK_FoodContactMaterial_Product FOREIGN KEY (ProductID) REFERENCES Product(ProductID);
+GO
+
+-- Supplier & Group relation
+ALTER TABLE Supplier
+ADD CONSTRAINT FK_Supplier_Group FOREIGN KEY (GroupID) REFERENCES [Group](GroupID);
+GO
+
+ALTER TABLE [Group]
+ADD CONSTRAINT FK_Group_Supplier FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID);
+GO
