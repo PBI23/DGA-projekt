@@ -254,3 +254,80 @@ GO
 ALTER TABLE [Group]
 ADD CONSTRAINT FK_Group_Supplier FOREIGN KEY (SupplierID) REFERENCES Supplier(SupplierID);
 GO
+
+
+-- ========================
+-- 🔢 TESTDATA (INSERTS)
+-- ========================
+
+-- Lookup: Country
+INSERT INTO Country (CountryCode, CountryName) VALUES
+('DK', 'Denmark'),
+('DE', 'Germany'),
+('CN', 'China');
+GO
+
+-- Lookup: ColorGroup
+INSERT INTO ColorGroup (ColorGroupName) VALUES
+('Neutral'),
+('Warm'),
+('Cool');
+GO
+
+-- Lookup: Pantone
+INSERT INTO Pantone (ColorCode, ColorName) VALUES
+('PMS 186 C', 'Red'),
+('PMS 299 C', 'Blue'),
+('PMS 375 C', 'Green');
+GO
+
+-- Lookup: Certification
+INSERT INTO Certification (CertificationType, Description) VALUES
+('Organic', 'Certified organic material'),
+('FairTrade', 'Produced under fair trade standards');
+GO
+
+-- Lookup: Designer
+INSERT INTO Designer (DesignerName) VALUES
+('Anna Møller'),
+('Jonas Lind');
+GO
+
+-- Entity: Supplier
+INSERT INTO Supplier (SupplierNo, Name) VALUES
+(1001, 'Nordic Supplies'),
+(1002, 'Asia Imports');
+GO
+
+-- Entity: Product
+INSERT INTO Product (SupplierID, CountryID, DesignerID, ColorGroupID, CreatedDate, ModifiedDate, SetupStage, HasBeenApproved)
+VALUES
+(1, 1, 1, 2, GETDATE(), GETDATE(), GETDATE(), 1),
+(2, 3, 2, 1, GETDATE(), GETDATE(), GETDATE(), 0);
+GO
+
+-- Entity: ProductDetails
+INSERT INTO ProductDetails (ProductID, DGAItemNo, ProductLogo, Series, ProductDescription, MOQ, CostPrice, Unit, UnitPCS)
+VALUES
+(1, 'DGA-001', 'Logo1', 'Cozy Line', 'A stylish red candle', 100, 25.50, 'pcs', 12),
+(2, 'DGA-002', 'Logo2', 'Nature Touch', 'A green ceramic mug', 200, 15.00, 'pcs', 6);
+GO
+
+-- Entity: ProductCategory
+INSERT INTO ProductCategory (ProductID, MainGroup, MainCategory, SubCategory)
+VALUES
+(1, 'Home', 'Candles', 'Scented'),
+(2, 'Kitchen', 'Cups', 'Ceramic');
+GO
+
+-- Relation: ProductPantone
+INSERT INTO ProductPantone (ProductID, PantoneID) VALUES
+(1, 1),
+(2, 3);
+GO
+
+-- Relation: ProductCertification
+INSERT INTO ProductCertification (ProductID, CertificateID, ValidUntil) VALUES
+(1, 1, '2026-12-31'),
+(2, 2, '2025-06-30');
+GO
