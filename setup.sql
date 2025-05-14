@@ -17,7 +17,7 @@ GO
 ------------ TABLES ------------
 
 -- ========================
--- 🟦 LOOKUP-TABELLER
+-- LOOKUP-TABELLER
 -- ========================
 CREATE TABLE Country (
     CountryID INT IDENTITY(1,1) PRIMARY KEY,
@@ -47,7 +47,7 @@ CREATE TABLE Certification (
 GO
 
 -- ========================
--- 🟡 ENTITETSTABELLER
+-- ENTITETSTABELLER
 -- ========================
 CREATE TABLE Designer (
     DesignerID INT IDENTITY(1,1) PRIMARY KEY,
@@ -81,6 +81,8 @@ CREATE TABLE Product (
     ModifiedDate DATE,
     SetupStage DATE,
     HasBeenApproved BIT
+    CurrentStep INT,
+
 );
 GO
 
@@ -175,7 +177,7 @@ CREATE TABLE FoodContactMaterial (
 GO
 
 -- ========================
--- 🟩 RELATIONSTABELLER
+-- RELATIONSTABELLER
 -- ========================
 CREATE TABLE ProductCertification (
     ProductID INT NOT NULL,
@@ -330,4 +332,246 @@ GO
 INSERT INTO ProductCertification (ProductID, CertificateID, ValidUntil) VALUES
 (1, 1, '2026-12-31'),
 (2, 2, '2025-06-30');
+GO
+
+
+
+-- ========================
+-- STORED PROCEDURES
+-- ========================
+
+-- 1. Opret nyt produkt (med detaljer og kategorier)
+CREATE PROCEDURE spCreateProduct
+    @SupplierID INT,
+    @CountryID INT,
+    @DesignerID INT,
+    @ColorGroupID INT,
+    @DGAItemNo NVARCHAR(50),
+    @ProductLogo NVARCHAR(50),
+    @Series NVARCHAR(100),
+    @ProductDescription NVARCHAR(MAX),
+    @MOQ INT,
+    @CostPrice DECIMAL(10,2),
+    @Unit NVARCHAR(10),
+    @UnitPCS INT,
+    @MainGroup NVARCHAR(100),
+    @MainCategory NVARCHAR(100),
+    @SubCategory NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @ProductID INT;
+
+    INSERT INTO Product (SupplierID, CountryID, DesignerID, ColorGroupID, CreatedDate, ModifiedDate, SetupStage, HasBeenApproved)
+    VALUES (@SupplierID, @CountryID, @DesignerID, @ColorGroupID, GETDATE(), GETDATE(), GETDATE(), 0);
+
+    SET @ProductID = SCOPE_IDENTITY();
+
+    INSERT INTO ProductDetails (ProductID, DGAItemNo, ProductLogo, Series, ProductDescription, MOQ, CostPrice, Unit, UnitPCS)
+    VALUES (@ProductID, @DGAItemNo, @ProductLogo, @Series, @ProductDescription, @MOQ, @CostPrice, @Unit, @UnitPCS);
+
+    INSERT INTO ProductCategory (ProductID, MainGroup, MainCategory, SubCategory)
+    VALUES (@ProductID, @MainGroup, @MainCategory, @SubCategory);
+
+    SELECT @ProductID AS NewProductID;
+END
+GO
+
+-- 2. Opdater produktdetaljer
+CREATE PROCEDURE spUpdateProductDetails
+    @ProductID INT,
+    @MOQ INT,
+    @CostPrice DECIMAL(10,2),
+    @ProductDescription NVARCHAR(MAX),
+    @Unit NVARCHAR(10),
+    @UnitPCS INT
+AS
+BEGIN
+    UPDATE ProductDetails
+    SET MOQ = @MOQ,
+        CostPrice = @CostPrice,
+        ProductDescription = @ProductDescription,
+        Unit = @Unit,
+        UnitPCS = @UnitPCS
+    WHERE ProductID = @ProductID;
+END
+GO
+
+-- 3. Godkend produkt
+CREATE PROCEDURE spApproveProduct
+    @ProductID INT
+AS
+BEGIN
+    UPDATE Product
+    SET HasBeenApproved = 1,
+        ModifiedDate = GETDATE()
+    WHERE ProductID = @ProductID;
+END
+GO
+
+-- 4. Slet produkt og tilhørende poster
+CREATE PROCEDURE spDeleteProduct
+    @ProductID INT
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+
+        DELETE FROM ProductPantone WHERE ProductID = @ProductID;
+        DELETE FROM ProductCertification WHERE ProductID = @ProductID;
+        DELETE FROM FoodContactMaterial WHERE ProductID = @ProductID;
+        DELETE FROM ProductPackageDimensions WHERE ProductID = @ProductID;
+        DELETE FROM ProductDimensions WHERE ProductID = @ProductID;
+        DELETE FROM Picture WHERE ProductID = @ProductID;
+        DELETE FROM ProductCategory WHERE ProductID = @ProductID;
+        DELETE FROM ProductDetails WHERE ProductID = @ProductID;
+        DELETE FROM Product WHERE ProductID = @ProductID;
+
+        COMMIT;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK;
+        THROW;
+    END CATCH
+END
+GO
+
+-- 5. Tilføj pantonefarve til produkt 
+CREATE PROCEDURE spAddPantoneToProduct
+    @ProductID INT,
+    @PantoneID INT
+AS
+BEGIN
+    INSERT INTO ProductPantone (ProductID, PantoneID)
+    VALUES (@ProductID, @PantoneID);
+END
+GO
+
+-- 6. Tilføj certificering til produkt
+CREATE PROCEDURE spAddCertificationToProduct
+    @ProductID INT,
+    @CertificateID INT,
+    @ValidUntil DATE
+AS
+BEGIN
+    INSERT INTO ProductCertification (ProductID, CertificateID, ValidUntil)
+    VALUES (@ProductID, @CertificateID, @ValidUntil);
+END
+GO
+
+-- 7. Hent produktinfo med detaljer og kategori
+CREATE PROCEDURE spGetProductFullInfo
+    @ProductID INT
+AS
+BEGIN
+    SELECT 
+        p.ProductID, p.CreatedDate, p.HasBeenApproved,
+        pd.DGAItemNo, pd.ProductDescription, pd.CostPrice, pd.Unit, pd.UnitPCS,
+        pc.MainGroup, pc.MainCategory, pc.SubCategory,
+        s.Name AS SupplierName,
+        d.DesignerName
+    FROM Product p
+    JOIN ProductDetails pd ON p.ProductID = pd.ProductID
+    JOIN ProductCategory pc ON p.ProductID = pc.ProductID
+    JOIN Supplier s ON p.SupplierID = s.SupplierID
+    JOIN Designer d ON p.DesignerID = d.DesignerID
+    WHERE p.ProductID = @ProductID;
+END
+GO
+
+-- 8. Tilføj ny farvegruppe
+CREATE PROCEDURE spAddColorGroup
+    @ColorGroupName NVARCHAR(100)
+AS
+BEGIN
+    INSERT INTO ColorGroup (ColorGroupName)
+    VALUES (@ColorGroupName);
+END
+GO
+
+-- 9. Valider om produkt eksisterer
+CREATE PROCEDURE spProductExists
+    @ProductID INT
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Product WHERE ProductID = @ProductID)
+        SELECT 1 AS Exists;
+    ELSE
+        SELECT 0 AS Exists;
+END
+GO
+
+-- 10. Tilføj ny certificeringstype
+CREATE PROCEDURE spAddCertification
+    @CertificationType NVARCHAR(100),
+    @Description NVARCHAR(MAX)
+AS
+BEGIN
+    INSERT INTO Certification (CertificationType, Description)
+    VALUES (@CertificationType, @Description);
+END
+GO
+
+-- WIP
+-- ========================
+-- STEP-FLOW & VALIDATION
+-- ========================
+
+--  FieldDefinition – styring af felter og deres regler
+CREATE TABLE FieldDefinition (
+    FieldDefinitionID INT IDENTITY(1,1) PRIMARY KEY,
+    FieldName NVARCHAR(100) NOT NULL,
+    Step INT NOT NULL,
+    IsRequired BIT NOT NULL,
+    IsOptional BIT NOT NULL,
+    DependsOn NVARCHAR(100) NULL,
+    Datatype NVARCHAR(50) NOT NULL,
+    GroupTag NVARCHAR(50) NULL
+);
+GO
+
+--  FieldDependency – regler for afhængige felter
+CREATE TABLE FieldDependency (
+    FieldDependencyID INT IDENTITY(1,1) PRIMARY KEY,
+    ParentField NVARCHAR(100) NOT NULL,
+    ChildField NVARCHAR(100) NOT NULL,
+    TriggerValue NVARCHAR(100) NOT NULL,
+    Step INT NOT NULL
+);
+GO
+-- Returnerer alle felter, som frontend (FE) skal vise i et givent trin i produktoprettelsen – inklusive deres regler og afhængigheder.
+CREATE PROCEDURE spGetFieldsForStep
+    @Step INT
+AS
+BEGIN
+    SELECT 
+        FieldName,
+        IsRequired,
+        IsOptional,
+        DependsOn,
+        Datatype,
+        GroupTag
+    FROM FieldDefinition
+    WHERE Step = @Step;
+END
+GO
+
+
+
+-- ========================
+-- TESTDATA TIL FLOW-STYRING
+-- ========================
+-- 💡 Eksempel: Hvis 'IsFoodApproved = true' → vis 'FKM_MaterialType'
+
+-- FieldDefinition: definér felter til step 1 og 2
+INSERT INTO FieldDefinition (FieldName, Step, IsRequired, IsOptional, DependsOn, Datatype, GroupTag) VALUES
+('ProductName',        1, 1, 0, NULL,            'Text',   'Basis'),
+('IsFoodApproved',     2, 1, 0, NULL,            'Boolean','Certificering'),
+('FKM_MaterialType',   2, 1, 0, 'IsFoodApproved','String', 'Certificering');
+GO
+
+-- FieldDependency: afhængighed – hvis IsFoodApproved = true → vis FKM_MaterialType
+INSERT INTO FieldDependency (ParentField, ChildField, TriggerValue, Step) VALUES
+('IsFoodApproved', 'FKM_MaterialType', 'true', 2);
 GO
