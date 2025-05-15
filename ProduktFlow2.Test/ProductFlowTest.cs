@@ -33,6 +33,10 @@ namespace ProduktFlow2.Test
             Console.WriteLine("?? Kører trin 3 test...");
             TestStep3();
             Console.WriteLine("? Trin 3 OK\n");
+
+            Console.WriteLine("?? Kører trin 4 test...");
+            TestStep4();
+            Console.WriteLine("? Trin 4 OK\n");
         }
 
         private void TestStep1()
@@ -68,10 +72,10 @@ namespace ProduktFlow2.Test
             {
                 ProductId = productId,
                 Answers = new Dictionary<string, bool>
-        {
-            { "Fødevarekontaktmaterialer - FKM", true },
-            { "REACH", true }
-        }
+                {
+                    { "Fødevarekontaktmaterialer - FKM", true },
+                    { "REACH", true }
+                }
             };
 
             _service.SaveStep2Answers(dto);
@@ -88,7 +92,6 @@ namespace ProduktFlow2.Test
                 Console.WriteLine($" - {f.FieldName}");
         }
 
-
         private void TestStep3()
         {
             var fields = _repo.GetFieldDefinitionsByStep(3);
@@ -102,5 +105,38 @@ namespace ProduktFlow2.Test
             }
         }
 
+        private void TestStep4()
+        {
+            var productId = _repo.GetAllDrafts()[0].ProductId;
+
+            var dto = new Step4Dto
+            {
+                ProductId = productId,
+                DgaColorGroupName = "Grøn",
+                PantonePantone = "Pantone 123",
+                DgaSalCatGroup = "1010 Notesblokke",
+                DgaVendItemCodeCode = "5",
+                Assorted = true,
+                AdditionalInformation = "Ekstra info",
+                GsmWeight = 180,
+                BurningTimeHours = 12,
+                AntidopingRegulation = false,
+                Subcategory = "Testkategori",
+                OtherInformation2 = "Flere detaljer",
+                GsmWeight2 = 200
+            };
+
+            _service.SaveStep4Answers(dto);
+
+            var updatedProduct = _repo.GetProductById(productId);
+            Console.WriteLine("🎯 Step 4 værdier gemt:");
+            Console.WriteLine($" - Farve: {updatedProduct.DgaColorGroupName}");
+            Console.WriteLine($" - Pantone: {updatedProduct.PantonePantone}");
+            Console.WriteLine($" - GsmWeight: {updatedProduct.GsmWeight}, Brændetid: {updatedProduct.BurningTimeHours}");
+            Console.WriteLine($" - Subcategory: {updatedProduct.Subcategory}");
+
+            if (updatedProduct.DgaColorGroupName != dto.DgaColorGroupName)
+                throw new Exception("Step 4 fejlede: Farve ikke gemt korrekt");
+        }
     }
 }

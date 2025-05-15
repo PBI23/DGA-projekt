@@ -102,6 +102,42 @@ namespace ProduktFlow2.Core.Services
             }
         }
 
+        public void SaveStep3Answers(Step3Dto dto)
+        {
+            var product = _repo.GetProductById(dto.ProductId);
+
+            // Her gemmer vi blot felterne direkte i produktet for nu
+            //product.Status = "Step3Completed"; 
+            // eller en anden logik
+
+        }
+
+
+        /// <summary>
+        /// Saves data from optional Step 4 fields into the product object (simplified approach).
+        /// </summary>
+        /// <param name="dto">Step4Dto containing all optional step 4 answers.</param>
+        public void SaveStep4Answers(Step4Dto dto)
+        {
+            var product = _repo.GetProductById(dto.ProductId);
+
+            product.DgaColorGroupName = dto.DgaColorGroupName;
+            product.DgaSalCatGroup = dto.DgaSalCatGroup;
+            product.PantonePantone = dto.PantonePantone;
+            product.DgaVendItemCodeCode = dto.DgaVendItemCodeCode;
+            product.Assorted = dto.Assorted;
+            product.AdditionalInformation = dto.AdditionalInformation;
+            product.Subcategory = dto.Subcategory;
+            product.GsmWeight = (int?)dto.GsmWeight;
+            product.GsmWeight2 = (int?)dto.GsmWeight2;
+            product.BurningTimeHours = (int?)dto.BurningTimeHours;
+            product.AntidopingRegulation = dto.AntidopingRegulation;
+            product.OtherInformation2 = dto.OtherInformation2;
+        }
+
+
+
+
         /// <summary>
         /// Retrieves all field definitions for a given step number.
         /// </summary>
@@ -116,37 +152,36 @@ namespace ProduktFlow2.Core.Services
         /// Retrieves fields that are conditionally triggered based on user input.
         /// Used to support dynamic forms (e.g., dependencies like FKM → subfields).
         /// </summary>
-        /// <param name="parentField">The field name that has a
+        /// <param name="parentField">The field name that has a dependency relationship.</param>
+        /// <param name="triggerValue">The value that triggers one or more dependent fields.</param>
+        /// <param name="step">The step number in which the dependency applies.</param>
 
 
-
-        /*
-        int id = _repo.AddProduct(product);
-
-        List<FieldDefinition> fields = _repo.GetFieldDefinitionsByStep(2);
-        foreach (FieldDefinition f in fields)
+        public List<FieldDefinition> GetTriggeredFields(string parentField, string triggerValue, int step)
         {
-            ProductCertification cert = new ProductCertification();
-            cert.ProductId = id;
-            cert.Type = f.FieldName;
-            cert.Status = false;
-            _repo.AddCertification(cert);
+            return _repo.GetTriggeredFields(parentField, triggerValue, step);
         }
-        return id;
-    }
 
-    public List<FieldDefinition> GetFieldsForStep(int step)
-    {
-        return _repo.GetFieldDefinitionsByStep(step);
-    }
-
-    public void SaveCertifications(int productId, Dictionary<string, bool> answers)
-    {
-        foreach (KeyValuePair<string, bool> entry in answers)
+        public List<Product> GetAllDrafts()
         {
-            _repo.UpdateCertification(productId, entry.Key, entry.Value);
+            return _repo.GetAllDrafts();
         }
+        // For upstart to show all in draft or un-complete
+        public Product GetProductById(int id)
+        {
+            return _repo.GetProductById(id);
+        }
+
+
+        public void UpdateStatus(int productId, string newStatus)
+        {
+            var product = _repo.GetProductById(productId);
+            product.Status = newStatus;
+        }
+
+
+
     }
-    }*/
-    }
+}
+
 

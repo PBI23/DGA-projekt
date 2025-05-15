@@ -93,7 +93,22 @@ namespace ProduktFlow2.Core.Repositories
     new FieldDefinition { FieldName = "ABC", Step = 3, IsRequired = true, Datatype = "Dropdown", GroupTag = "Classification" },
     new FieldDefinition { FieldName = "Product logo", Step = 3, IsRequired = true, Datatype = "Dropdown", GroupTag = "Branding" },
     new FieldDefinition { FieldName = "Hangtags & Stickers", Step = 3, IsRequired = true, Datatype = "Dropdown", GroupTag = "Packaging" },
-    new FieldDefinition { FieldName = "Series", Step = 3, IsRequired = true, Datatype = "Dropdown", GroupTag = "Series" }
+    new FieldDefinition { FieldName = "Series", Step = 3, IsRequired = true, Datatype = "Dropdown", GroupTag = "Series" },
+
+    // Trin 4  Optional questions
+    new FieldDefinition { FieldName = "DGA_Color_GroupName", Step = 4, IsRequired = false, Datatype = "Dropdown", GroupTag = "Optional" },
+    new FieldDefinition { FieldName = "DGA_SalCat_Group", Step = 4, IsRequired = false, Datatype = "Dropdown", GroupTag = "Optional" },
+    new FieldDefinition { FieldName = "Pantone_Pantone", Step = 4, IsRequired = false, Datatype = "Dropdown", GroupTag = "Optional" },
+    new FieldDefinition { FieldName = "DGA_VendItemCode_Code", Step = 4, IsRequired = false, Datatype = "Dropdown", GroupTag = "Optional" },
+
+    new FieldDefinition { FieldName = "Assorted", Step = 4, IsRequired = false, Datatype = "Boolean", GroupTag = "Optional" },
+    new FieldDefinition { FieldName = "AdditionalInformation", Step = 4, IsRequired = false, Datatype = "Text", GroupTag = "Optional" },
+    new FieldDefinition { FieldName = "GsmWeight", Step = 4, IsRequired = false, Datatype = "Number", GroupTag = "Optional" },
+    new FieldDefinition { FieldName = "BurningTimeHours", Step = 4, IsRequired = false, Datatype = "Number", GroupTag = "Optional" },
+    new FieldDefinition { FieldName = "AntidopingRegulation", Step = 4, IsRequired = false, Datatype = "Boolean", GroupTag = "Optional" },
+    new FieldDefinition { FieldName = "Subcategory", Step = 4, IsRequired = false, Datatype = "Text", GroupTag = "Optional" },
+    new FieldDefinition { FieldName = "OtherInformation2", Step = 4, IsRequired = false, Datatype = "Text", GroupTag = "Optional" },
+    new FieldDefinition { FieldName = "GsmWeight2", Step = 4, IsRequired = false, Datatype = "Number", GroupTag = "Optional" }
 
 
 };
@@ -107,12 +122,12 @@ namespace ProduktFlow2.Core.Repositories
                 "ProductGroup" => new List<string> { "Køkken", "Jul", "Tekstil", "Outdoor" },
                 "ABC" => new List<string> { "A", "B", "C" },
                 "Product logo" => new List<string> { "C2G", "Customer", "DGA", "JULIUS" },
-                "Hangtags & Stickers" => new List<string> {
-            "Backcard", "Belt 100mm", "Blistercard", "Craftbox", "Julius sticker for PET box", /* osv. forkort evt. listen */
-        },
-                "Series" => new List<string> {
-            "100% christmas", "A christmas story", "Acorn", "Apple Pixies", "Autumn Moments", /* osv. */
-        },
+                "Hangtags & Stickers" => new List<string> { "Backcard", "Belt 100mm", "Blistercard", "Craftbox" },
+                "Series" => new List<string> { "100% christmas", "A christmas story", "Acorn" },
+                "DGA_Color_GroupName" => new List<string> { "Amber", "Beige", "Blå", "Bordeaux", "Bronze", "Brun", "Champagne", "Creme", "Flerfarvet", "Frosted", "Gammel rosa", "Grøn", "Grå", "Gul", "Guld", "Hvid", "Kobber", "Lilla", "Messing", "Natur", "Orange", "Pink", "Rosa", "Rust", "Rød", "Sort", "Sølv", "Transparent", "Zink" },
+                "DGA_SalCat_Group" => new List<string> { "1002 Sjovt tilbehør", "1010 Notesblokke", "1011 Gaveposer", "1015 Gavemærker" /* osv. forkortet */ },
+                "Pantone_Pantone" => new List<string> { "Black", "Rød Norsk flag", "Champagne", "Creme", "White", "Yellow", "Melon", "Old rose", "Dusty Green", "Grey", "Green", "Orange" },
+                "DGA_VendItemCode_Code" => Enumerable.Range(2, 44).Select(i => i.ToString()).ToList(),
                 _ => new List<string>()
             };
         }

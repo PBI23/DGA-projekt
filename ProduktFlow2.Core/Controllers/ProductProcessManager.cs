@@ -56,6 +56,7 @@ namespace ProduktFlow2.Core.Controllers
         public void SaveStep2Answers(Step2Dto dto)
         {
             _service.SaveStep2Answers(dto);
+            _service.UpdateStatus(dto.ProductId, "Step2Completed");
         }
 
         /// <summary>
@@ -69,5 +70,56 @@ namespace ProduktFlow2.Core.Controllers
         {
             return _service.GetTriggeredFields(parentField, triggerValue, 2);
         }
+
+
+        /// <summary>
+        /// Retrieves the field definitions/questions required for step 3 of the product creation.
+        /// </summary>
+        public List<FieldDefinition> StartStep3()
+        {
+            return _service.GetFieldsForStep(3);
+        }
+
+        /// <summary>
+        /// Saves the answers provided by the user in step 3.
+        /// </summary>
+        public void SaveStep3Answers(Step3Dto dto)
+        {
+            _service.SaveStep3Answers(dto);
+            _service.UpdateStatus(dto.ProductId, "Step3Completed");
+        }
+
+        /// <summary>
+        /// Retrieves the field definitions/questions required for step 4 of the product creation.
+        /// </summary>
+        public List<FieldDefinition> StartStep4()
+        {
+            return _service.GetFieldsForStep(4);
+        }
+
+        /// <summary>
+        /// Saves Step 4 answers using the service layer.
+        /// </summary>
+        /// <param name="dto">DTO containing optional answers.</param>
+        public void SaveStep4Answers(Step4Dto dto)
+        {
+            _service.SaveStep4Answers(dto);
+            _service.UpdateStatus(dto.ProductId, "Step4Completed");
+        }
+
+        public List<Product> GetDraftProducts()
+        {
+            return _service.GetAllDrafts();
+        }
+
+        public (Product Product, List<FieldDefinition> Fields) GetProductWithStepFields(int productId, int step)
+        {
+            var product = _service.GetProductById(productId);
+            var fields = _service.GetFieldsForStep(step);
+            return (product, fields);
+        }
+
+
     }
+
 }

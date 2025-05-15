@@ -79,6 +79,20 @@ namespace ProduktFlow2.Core.Models
         /// Initializes a new product instance with all string properties set to empty.
         /// This prevents null reference issues when handling form data.
         /// </summary>
+        /// 
+        // Step 4 optional fields
+        public string DgaColorGroupName { get; set; }
+        public string DgaSalCatGroup { get; set; }
+        public string PantonePantone { get; set; }
+        public string DgaVendItemCodeCode { get; set; }
+        public bool? Assorted { get; set; }
+        public string AdditionalInformation { get; set; }
+        public string Subcategory { get; set; }
+        public int? GsmWeight { get; set; }
+        public int? GsmWeight2 { get; set; }
+        public int? BurningTimeHours { get; set; }
+        public bool? AntidopingRegulation { get; set; }
+        public string OtherInformation2 { get; set; }
         public Product()
         {
             Name = string.Empty;
