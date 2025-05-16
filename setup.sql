@@ -80,8 +80,8 @@ CREATE TABLE Product (
     CreatedDate DATE,
     ModifiedDate DATE,
     SetupStage DATE,
-    HasBeenApproved BIT
-    CurrentStep INT,
+    HasBeenApproved BIT,
+    CurrentStep INT
 
 );
 GO
@@ -496,9 +496,10 @@ CREATE PROCEDURE spProductExists
 AS
 BEGIN
     IF EXISTS (SELECT 1 FROM Product WHERE ProductID = @ProductID)
-        SELECT 1 AS Exists;
+        SELECT 1 AS [Exists];
+
     ELSE
-        SELECT 0 AS Exists;
+        SELECT 0 AS [Exists];
 END
 GO
 
@@ -512,6 +513,251 @@ BEGIN
     VALUES (@CertificationType, @Description);
 END
 GO
+
+
+CREATE PROCEDURE spGetSavedFieldsForStep
+    @ProductID INT,
+    @Step INT
+AS
+BEGIN
+    SELECT 
+        FieldName,
+        FieldValue
+    FROM ProductFieldValue
+    WHERE ProductID = @ProductID AND Step = @Step;
+END
+GO
+
+
+CREATE PROCEDURE spValidateStep
+    @ProductID INT,
+    @Step INT
+AS
+BEGIN
+    SELECT 
+        fd.FieldName
+    FROM FieldDefinition fd
+    LEFT JOIN ProductFieldValue pfv
+        ON fd.FieldName = pfv.FieldName AND pfv.ProductID = @ProductID
+    WHERE fd.Step = @Step AND fd.IsRequired = 1 AND (pfv.FieldValue IS NULL OR pfv.FieldValue = '');
+END
+GO
+
+CREATE PROCEDURE spSaveStep1
+    @ProductID INT,
+    @Name NVARCHAR(100),
+    @Season NVARCHAR(50),
+    @DgaItemNo NVARCHAR(50),
+    @CountryOfOrigin NVARCHAR(100),
+    @Supplier NVARCHAR(200),
+    @Designer NVARCHAR(100),
+    @Description NVARCHAR(MAX),
+    @ColiSize NVARCHAR(50),
+    @ProductGroup NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Map navne til ID'er
+    DECLARE @CountryID INT = (SELECT CountryID FROM Country WHERE CountryName = @CountryOfOrigin);
+    DECLARE @SupplierID INT = (SELECT SupplierID FROM Supplier WHERE Name = @Supplier);
+    DECLARE @DesignerID INT = (SELECT DesignerID FROM Designer WHERE DesignerName = @Designer);
+
+    -- Opdater Product
+    UPDATE Product
+    SET CountryID = @CountryID,
+        SupplierID = @SupplierID,
+        DesignerID = @DesignerID,
+        ModifiedDate = GETDATE()
+    WHERE ProductID = @ProductID;
+
+    -- Opdater ProductDetails
+    UPDATE ProductDetails
+    SET DGAItemNo = @DgaItemNo,
+        ProductDescription = @Description,
+        UnitPCS = TRY_CAST(@ColiSize AS INT)
+    WHERE ProductID = @ProductID;
+
+    -- Opdater ProductCategory
+    UPDATE ProductCategory
+    SET MainGroup = @ProductGroup
+    WHERE ProductID = @ProductID;
+END
+GO
+
+
+CREATE PROCEDURE spSaveStep2FromJson
+    @ProductID INT,
+    @JsonAnswers NVARCHAR(MAX)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @Step INT = 2;
+
+    -- Parse JSON til tabel (kræver SQL Server 2016+)
+    SELECT 
+        [key] AS FieldName,
+        CAST([value] AS NVARCHAR(MAX)) AS FieldValue
+    INTO #TempAnswers
+    FROM OPENJSON(@JsonAnswers);
+
+    -- Gem hver feltværdi
+    MERGE ProductFieldValue AS target
+    USING #TempAnswers AS source
+    ON target.ProductID = @ProductID AND target.FieldName = source.FieldName
+    WHEN MATCHED THEN 
+        UPDATE SET FieldValue = source.FieldValue
+    WHEN NOT MATCHED THEN
+        INSERT (ProductID, FieldName, FieldValue, Step)
+        VALUES (@ProductID, source.FieldName, source.FieldValue, @Step);
+
+    DROP TABLE #TempAnswers;
+END
+GO
+
+
+CREATE PROCEDURE spSaveStep3
+    @ProductID INT,
+    @SupplierProductNo INT,
+    @CustomerClearanceNo INT,
+    @CustomerClearancePercent DECIMAL(5,2),
+    @CostPrice DECIMAL(10,2),
+    @InnerCarton INT,
+    @OuterCarton NVARCHAR(50),
+    @GrossWeight DECIMAL(10,2),
+    @PackingHeight DECIMAL(10,2),
+    @PackingWidthLength DECIMAL(10,2),
+    @PackingDepth DECIMAL(10,2),
+    @DishwasherSafe BIT,
+    @MicrowaveSafe BIT,
+    @Svanemaerket BIT,
+    @GrunerPunkt BIT,
+    @FSC100 BIT,
+    @FSCMix70 BIT,
+    @ABC CHAR(1),
+    @ProductLogo NVARCHAR(50),
+    @HangtagsAndStickers NVARCHAR(100),
+    @Series NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Opdater værdier i ProductDetails
+    UPDATE ProductDetails
+    SET 
+        SupplierProductNo = TRY_CAST(@SupplierProductNo AS NVARCHAR(50)),
+        CustomerClearanceNo = @CustomerClearanceNo,
+        CustomerClearencePercent = @CustomerClearancePercent,
+        CostPrice = @CostPrice,
+        ABC = @ABC,
+        ProductLogo = @ProductLogo,
+        HangtagsAndStickers = @HangtagsAndStickers,
+        Series = @Series
+    WHERE ProductID = @ProductID;
+
+    -- Opdater emballage
+    UPDATE ProductPackageDimensions
+    SET
+        GrossWeightKG = @GrossWeight,
+        PackagingHeightCM = @PackingHeight,
+        PackagingWidthCM = @PackingWidthLength,
+        PackagingDepthCM = @PackingDepth,
+        InnerCarton = @InnerCarton,
+        OuterCarton = TRY_CAST(@OuterCarton AS INT)
+    WHERE ProductID = @ProductID;
+
+    -- Gem boolean felter som tekst
+    DECLARE @Step INT = 3;
+    DECLARE @BoolText NVARCHAR(5);
+
+    SET @BoolText = IIF(@DishwasherSafe = 1, N'true', N'false');
+    EXEC spSaveFieldValue @ProductID, N'DishwasherSafe', @BoolText, @Step;
+
+    SET @BoolText = IIF(@MicrowaveSafe = 1, N'true', N'false');
+    EXEC spSaveFieldValue @ProductID, N'MicrowaveSafe', @BoolText, @Step;
+
+    SET @BoolText = IIF(@Svanemaerket = 1, N'true', N'false');
+    EXEC spSaveFieldValue @ProductID, N'Svanemaerket', @BoolText, @Step;
+
+    SET @BoolText = IIF(@GrunerPunkt = 1, N'true', N'false');
+    EXEC spSaveFieldValue @ProductID, N'GrunerPunkt', @BoolText, @Step;
+
+    SET @BoolText = IIF(@FSC100 = 1, N'true', N'false');
+    EXEC spSaveFieldValue @ProductID, N'FSC100', @BoolText, @Step;
+
+    SET @BoolText = IIF(@FSCMix70 = 1, N'true', N'false');
+    EXEC spSaveFieldValue @ProductID, N'FSCMix70', @BoolText, @Step;
+END
+GO
+
+
+
+
+CREATE PROCEDURE spSaveStep4
+    @ProductID INT,
+    @DgaColorGroupName NVARCHAR(100),
+    @DgaSalCatGroup NVARCHAR(100),
+    @PantonePantone NVARCHAR(100),
+    @DgaVendItemCodeCode NVARCHAR(100),
+    @Assorted BIT = NULL,
+    @AdditionalInformation NVARCHAR(MAX) = NULL,
+    @GsmWeight INT = NULL,
+    @BurningTimeHours INT = NULL,
+    @AntidopingRegulation BIT = NULL,
+    @Subcategory NVARCHAR(100) = NULL,
+    @OtherInformation2 NVARCHAR(255) = NULL,
+    @GsmWeight2 INT = NULL
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @Step INT = 4;
+
+    DECLARE @ColorGroupID INT = (SELECT TOP 1 ColorGroupID FROM ColorGroup WHERE ColorGroupName = @DgaColorGroupName);
+    DECLARE @PantoneID INT = (SELECT TOP 1 PantoneID FROM Pantone WHERE ColorName = @PantonePantone);
+
+    UPDATE Product
+    SET ColorGroupID = @ColorGroupID
+    WHERE ProductID = @ProductID;
+
+    UPDATE ProductDetails
+    SET 
+        SupplierProductNo = @DgaVendItemCodeCode,
+        Assorted = ISNULL(@Assorted, Assorted),
+        AdditionalInfo = @AdditionalInformation,
+        BurningTimeHours = @BurningTimeHours,
+        GsmWeight = @GsmWeight
+    WHERE ProductID = @ProductID;
+
+    UPDATE ProductCategory
+    SET SubCategory = @Subcategory
+    WHERE ProductID = @ProductID;
+
+    IF @PantoneID IS NOT NULL
+    BEGIN
+        IF NOT EXISTS (
+            SELECT 1 FROM ProductPantone WHERE ProductID = @ProductID AND PantoneID = @PantoneID
+        )
+        BEGIN
+            INSERT INTO ProductPantone (ProductID, PantoneID)
+            VALUES (@ProductID, @PantoneID);
+        END
+    END
+
+    -- Gem ekstra felter via variable
+    DECLARE @BoolText NVARCHAR(5) = IIF(@AntidopingRegulation = 1, N'true', N'false');
+    DECLARE @GsmWeightText NVARCHAR(20) = COALESCE(CAST(@GsmWeight2 AS NVARCHAR), N'');
+
+    EXEC spSaveFieldValue @ProductID, N'DgaSalCatGroup', @DgaSalCatGroup, @Step;
+    EXEC spSaveFieldValue @ProductID, N'AntidopingRegulation', @BoolText, @Step;
+    EXEC spSaveFieldValue @ProductID, N'OtherInformation2', @OtherInformation2, @Step;
+    EXEC spSaveFieldValue @ProductID, N'GsmWeight2', @GsmWeightText, @Step;
+END
+GO
+
+
+
+
 
 -- WIP
 -- ========================
@@ -540,7 +786,31 @@ CREATE TABLE FieldDependency (
     Step INT NOT NULL
 );
 GO
--- Returnerer alle felter, som frontend (FE) skal vise i et givent trin i produktoprettelsen – inklusive deres regler og afhængigheder.
+
+
+
+
+-- ========================
+-- GEMTE FELTVÆRDIER PER PRODUKT
+-- ========================
+CREATE TABLE ProductFieldValue (
+    ProductID INT NOT NULL,
+    FieldName NVARCHAR(100) NOT NULL,
+    FieldValue NVARCHAR(MAX),
+    Step INT NOT NULL,
+    PRIMARY KEY (ProductID, FieldName),
+    FOREIGN KEY (ProductID) REFERENCES Product(ProductID)
+);
+GO
+
+
+
+
+-- ========================
+-- STORED PROCEDURES: FELTDEFINITION OG FLOW
+-- ========================
+
+-- Hent alle felter for et givent trin
 CREATE PROCEDURE spGetFieldsForStep
     @Step INT
 AS
@@ -548,14 +818,61 @@ BEGIN
     SELECT 
         FieldName,
         IsRequired,
-        IsOptional,
-        DependsOn,
         Datatype,
-        GroupTag
+        GroupTag,
+        DependsOn
     FROM FieldDefinition
     WHERE Step = @Step;
 END
 GO
+
+-- Hent afhængige felter baseret på et felt og værdi
+CREATE PROCEDURE spGetDependentFields
+    @ParentField NVARCHAR(100),
+    @TriggerValue NVARCHAR(50),
+    @Step INT
+AS
+BEGIN
+    SELECT 
+        fd.FieldName,
+        fd.IsRequired,
+        fd.Datatype,
+        fd.GroupTag,
+        fd.DependsOn
+    FROM FieldDependency d
+    JOIN FieldDefinition fd 
+        ON d.ChildField = fd.FieldName AND d.Step = fd.Step
+    WHERE d.ParentField = @ParentField
+      AND d.TriggerValue = @TriggerValue
+      AND d.Step = @Step;
+END
+GO
+
+
+-- Gem én feltværdi for et produkt
+CREATE PROCEDURE spSaveFieldValue
+    @ProductID INT,
+    @FieldName NVARCHAR(100),
+    @FieldValue NVARCHAR(MAX),
+    @Step INT
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM ProductFieldValue WHERE ProductID = @ProductID AND FieldName = @FieldName)
+    BEGIN
+        UPDATE ProductFieldValue
+        SET FieldValue = @FieldValue
+        WHERE ProductID = @ProductID AND FieldName = @FieldName;
+    END
+    ELSE
+    BEGIN
+        INSERT INTO ProductFieldValue (ProductID, FieldName, FieldValue, Step)
+        VALUES (@ProductID, @FieldName, @FieldValue, @Step);
+    END
+END
+GO
+
+
+
 
 
 
