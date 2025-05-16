@@ -30,6 +30,6 @@ namespace ProduktFlow2.Core.Models
         /// Used for storing answers to yes/no fields, such as certifications or feature flags.
         /// Key = field name (string), Value = selected answer (true/false).
         /// </summary>
-        public Dictionary<string, bool> Answers { get; set; }
+        public Dictionary<string, bool> Answers { get; set; } = new();
     }
 }

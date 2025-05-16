@@ -1,22 +1,22 @@
-﻿using System;
+﻿using ProduktFlow2.Core.Models;
+using ProduktFlow2.Core.Repositories;
+using ProduktFlow2.Core.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ProduktFlow2.Core.Models;
-using ProduktFlow2.Core.Repositories;
-using ProduktFlow2.Core.Services;
 
 namespace ProduktFlow2.Test
 {
     public class ProductFlowTest
     {
         private readonly ProductService _service;
-        private readonly ProductRepositoryDummy _repo;
+        private readonly ProductRepositoryDb _repo;
 
         public ProductFlowTest()
         {
-            _repo = new ProductRepositoryDummy();
+            _repo = new ProductRepositoryDb("your_connection_string_here");
             _service = new ProductService(_repo);
         }
 
@@ -37,6 +37,10 @@ namespace ProduktFlow2.Test
             Console.WriteLine("?? Kører trin 4 test...");
             TestStep4();
             Console.WriteLine("? Trin 4 OK\n");
+
+            Console.WriteLine("?? Kører trin 5 test...");
+            TestStep5();
+            Console.WriteLine("? Trin 5 OK\n");
         }
 
         private void TestStep1()
@@ -138,5 +142,23 @@ namespace ProduktFlow2.Test
             if (updatedProduct.DgaColorGroupName != dto.DgaColorGroupName)
                 throw new Exception("Step 4 fejlede: Farve ikke gemt korrekt");
         }
+
+        private void TestStep5()
+        {
+            var productId = _repo.GetAllDrafts()[0].ProductId;
+
+            var dto = new Step5Dto
+            {
+                ProductId = productId,
+                IsFinalApproved = true,
+                ApprovedBy = "QA-Manager",
+                ApprovedDate = DateTime.UtcNow
+            };
+
+            _service.SaveStep5Answers(dto);
+
+            Console.WriteLine("🎯 Step 5: Godkendelse gennemført");
+        }
     }
 }
+

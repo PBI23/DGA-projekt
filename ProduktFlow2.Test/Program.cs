@@ -1,16 +1,32 @@
-﻿using ProduktFlow2.Test;
+﻿using Microsoft.Extensions.DependencyInjection;
+using ProduktFlow2.Core.Repositories;
+using ProduktFlow2.Core.Services;
+using ProduktFlow2.Test;
 
 internal class Program
 {
-    static void Main()
+    private static void Main(string[] args)
     {
-        Console.WriteLine("=== Starter tests ===");
+        Console.WriteLine("Starter testmiljø...");
 
-        var test = new ProductFlowTest();
-        test.RunAll();
+        // DI container
+        var services = new ServiceCollection();
 
-        Console.WriteLine("=== Alle tests er kørt ===");
-        Console.WriteLine("Tryk en tast for at afslutte...");
-        Console.ReadKey();
+        // 💡 Brug database-repository
+        string connectionString = "Server=.;Database=ProduktDb;Trusted_Connection=True;";
+        services.AddSingleton<IProductRepository>(provider => new ProductRepositoryDb(connectionString));
+
+        // Registrer services
+        services.AddSingleton<ProductService>();
+        services.AddSingleton<ProductFlowTest>();
+
+        // Build provider
+        var serviceProvider = services.BuildServiceProvider();
+
+        // Kør testflow
+        var testRunner = serviceProvider.GetRequiredService<ProductFlowTest>();
+        testRunner.RunAll();
+
+        Console.WriteLine("\n✅ Alle testkørsler afsluttet.");
     }
 }
