@@ -139,7 +139,7 @@ namespace ProduktFlow2.Core.Repositories
             {
                 var field = new FieldDefinition
                 {
-                    FieldDefinitionID = reader.GetInt32(reader.GetOrdinal("FieldDefinitionID")),
+                    FieldDefinitionID = reader.GetInt32(reader.GetOrdinal("FieldDefinitionId")),
                     FieldName = reader.GetString(reader.GetOrdinal("FieldName")),
                     Step = reader.GetInt32(reader.GetOrdinal("Step")),
                     IsRequired = reader.GetBoolean(reader.GetOrdinal("IsRequired")),
@@ -171,7 +171,7 @@ namespace ProduktFlow2.Core.Repositories
             {
                 var field = new FieldDefinition
                 {
-                    FieldDefinitionID = reader.GetInt32(reader.GetOrdinal("FieldDefinitionID")),
+                    FieldDefinitionID = reader.GetInt32(reader.GetOrdinal("FieldDefinitionId")),
                     FieldName = reader.GetString(reader.GetOrdinal("FieldName")),
                     Step = reader.GetInt32(reader.GetOrdinal("Step")),
                     IsRequired = reader.GetBoolean(reader.GetOrdinal("IsRequired")),
@@ -200,20 +200,21 @@ namespace ProduktFlow2.Core.Repositories
                 var product = new Product
                 {
                     ProductId = reader.GetInt32(reader.GetOrdinal("ProductId")),
-                    Name = reader.GetString(reader.GetOrdinal("Name")),
+                    Name = reader.IsDBNull(reader.GetOrdinal("Name")) ? "" : reader.GetString(reader.GetOrdinal("Name")),
                     Season = reader.IsDBNull(reader.GetOrdinal("Season")) ? "" : reader.GetString(reader.GetOrdinal("Season")),
-                    DgaItemNo = reader.GetString(reader.GetOrdinal("DgaItemNo")),
-                    CountryOfOrigin = reader.GetString(reader.GetOrdinal("CountryOfOrigin")),
-                    Supplier = reader.GetString(reader.GetOrdinal("Supplier")),
-                    Designer = reader.GetString(reader.GetOrdinal("Designer")),
+                    DgaItemNo = reader.IsDBNull(reader.GetOrdinal("DgaItemNo")) ? "" : reader.GetString(reader.GetOrdinal("DgaItemNo")),
+                    CountryOfOrigin = reader.IsDBNull(reader.GetOrdinal("CountryOfOrigin")) ? "" : reader.GetString(reader.GetOrdinal("CountryOfOrigin")),
+                    Supplier = reader.IsDBNull(reader.GetOrdinal("Supplier")) ? "" : reader.GetString(reader.GetOrdinal("Supplier")),
+                    Designer = reader.IsDBNull(reader.GetOrdinal("Designer")) ? "" : reader.GetString(reader.GetOrdinal("Designer")),
                     Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? "" : reader.GetString(reader.GetOrdinal("Description")),
-                    ColiSize = reader.IsDBNull(reader.GetOrdinal("ColiSize")) ? "" : reader.GetString(reader.GetOrdinal("ColiSize")),
-                    ProductGroup = reader.GetString(reader.GetOrdinal("ProductGroup")),
-                    Status = reader.GetString(reader.GetOrdinal("Status"))
+                    ColiSize = reader.IsDBNull(reader.GetOrdinal("ColiSize")) ? "" : reader.GetInt32(reader.GetOrdinal("ColiSize")).ToString(),
+                    ProductGroup = reader.IsDBNull(reader.GetOrdinal("ProductGroup")) ? "" : reader.GetString(reader.GetOrdinal("ProductGroup")),
+                    Status = reader.IsDBNull(reader.GetOrdinal("Status")) ? "" : reader.GetString(reader.GetOrdinal("Status"))
                 };
 
                 drafts.Add(product);
             }
+
 
             return drafts;
         }
@@ -240,7 +241,7 @@ namespace ProduktFlow2.Core.Repositories
                 Supplier = reader.GetString(reader.GetOrdinal("Supplier")),
                 Designer = reader.GetString(reader.GetOrdinal("Designer")),
                 Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? "" : reader.GetString(reader.GetOrdinal("Description")),
-                ColiSize = reader.IsDBNull(reader.GetOrdinal("ColiSize")) ? "" : reader.GetString(reader.GetOrdinal("ColiSize")),
+                ColiSize = reader.IsDBNull(reader.GetOrdinal("ColiSize")) ? "" : reader.GetInt32(reader.GetOrdinal("ColiSize")).ToString(),
                 ProductGroup = reader.GetString(reader.GetOrdinal("ProductGroup")),
                 Status = reader.GetString(reader.GetOrdinal("Status"))
             };
