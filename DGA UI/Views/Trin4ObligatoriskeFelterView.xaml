@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:ProduktOprettelse.Views"
              mc:Ignorable="d" 
-             d:DesignHeight="850" d:DesignWidth="800">
+             d:DesignHeight="1800" d:DesignWidth="800">
     
         <Grid Margin="10">
             <Grid.ColumnDefinitions>
@@ -97,11 +97,13 @@
             <TextBlock Text="Other" FontWeight="SemiBold" Grid.Row="32" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
             <TextBlock Text="FSC100" FontWeight="SemiBold" Grid.Row="33" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
             <TextBlock Text="FSCMIX70" FontWeight="SemiBold" Grid.Row="34" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
-            
+            <TextBlock Text="Hangtags/Stickers" FontWeight="SemiBold" Grid.Row="35" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
             <TextBlock Text="Group" FontWeight="SemiBold" Grid.Row="36" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Produktserie" FontWeight="SemiBold" Grid.Row="37" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Produkt Logo" FontWeight="SemiBold" Grid.Row="38" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
 
-            <!-- Input felter for de nye felter fra tabellen (tilpasset efter typen) -->
-            <TextBox x:Name="txtLeverandorProduktNr" Grid.Row="7" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+
+        <TextBox x:Name="txtLeverandorProduktNr" Grid.Row="7" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
             <TextBox x:Name="txtCustomerClearanceNo" Grid.Row="8" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericOnly" FontSize="14"/>
             <TextBox x:Name="txtCustomerClearancePct" Grid.Row="9" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
             <TextBox x:Name="txtInnerCarton" Grid.Row="10" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericOnly" FontSize="14"/>
@@ -129,7 +131,10 @@
             <TextBox x:Name="txtOther" Grid.Row="32" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
             <CheckBox x:Name="chkFSC100" Grid.Row="33" Grid.Column="1" Margin="0,15,0,5" VerticalAlignment="Center" FontSize="14"/>
             <CheckBox x:Name="chkFSCMIX70" Grid.Row="34" Grid.Column="1" Margin="0,15,0,5" VerticalAlignment="Center" FontSize="14"/>
+            <ComboBox x:Name="cmbHangtagsStickers" Grid.Row="35" Grid.Column="1" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
             <TextBox x:Name="txtGroup" Grid.Row="36" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
-        </Grid>
+            <ComboBox x:Name="cmbProduktserie" Grid.Row="37" Grid.Column="1" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+        <ComboBox x:Name="cmbProduktLogo" Grid.Row="38" Grid.Column="1" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+    </Grid>
     
 </UserControl>

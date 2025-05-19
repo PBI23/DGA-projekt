@@ -233,11 +233,22 @@ namespace ProduktOprettelse.Views
         /// </summary>
         public bool FSCMIX70 => chkFSCMIX70?.IsChecked ?? false;
 
+        /// <summary>
+        /// Giv produktet et hangtag eller sticker
+        /// </summary>
+        public string HangtagsStickers => cmbHangtagsStickers?.SelectedItem?.ToString() ?? string.Empty;
+
 
         /// <summary>
         /// Får gruppe.
         /// </summary>
         public string Group => txtGroup?.Text ?? string.Empty;
+
+        /// <summary>
+        /// Produktserie
+        /// </summary>
+
+        public string Produktserie => cmbProduktserie?.SelectedItem?.ToString() ?? string.Empty;
 
         #endregion
 
@@ -274,13 +285,21 @@ namespace ProduktOprettelse.Views
             bool customerClearancePctValid = string.IsNullOrWhiteSpace(CustomerClearancePct) || decimal.TryParse(CustomerClearancePct.Replace(',', '.'), out _);
             bool innerCartonValid = string.IsNullOrWhiteSpace(InnerCarton) || int.TryParse(InnerCarton, out _);
 
+            // Valider at der er valgt en produktserie, handtags eller stickers og at der er indtastet en gruppe
+
+            bool produktserieValid = cmbProduktserie?.SelectedItem != null;
+            bool hangtagsStickersValid = cmbHangtagsStickers?.SelectedItem != null;
+            bool groupValid = !string.IsNullOrWhiteSpace(Group);
+            bool produktLogoValid = cmbProduktLogo?.SelectedItem != null;
+
             // Samlet validering
             return kostprisValid && salgsprisValid && startdatoValid &&
                    kostprisTalValid && salgsprisTalValid && datoerValide &&
                    grossWeightValid && packingHeightValid &&
                    packingWidthValid && packingDepthValid && kiHeightValid &&
                    kyHeightValid && kyWidthValid && customerClearanceNoValid &&
-                   customerClearancePctValid && innerCartonValid;
+                   customerClearancePctValid && innerCartonValid && produktserieValid &&
+                   hangtagsStickersValid && groupValid && produktLogoValid;
         }
 
         /// <summary>
@@ -339,7 +358,10 @@ namespace ProduktOprettelse.Views
             txtOther.Text = string.Empty;
             chkFSC100.IsChecked = false;
             chkFSCMIX70.IsChecked = false;
+            cmbHangtagsStickers.SelectedIndex = -1;
             txtGroup.Text = string.Empty;
+            cmbProduktserie.SelectedIndex = -1;
+            cmbProduktLogo.SelectedIndex = -1;
         }
     }
 }
