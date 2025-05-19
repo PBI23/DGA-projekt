@@ -1008,6 +1008,205 @@ GO
 
 
 
+-- ===================================
+-- 11. TRIGGERS – AUDIT LOGGING
+-- ===================================
+
+-- Audit trigger for Product table
+CREATE TRIGGER trg_Audit_Product
+ON Product
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @User NVARCHAR(100) = SYSTEM_USER;
+
+    -- ========== INSERT ==========
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'Product', 'INSERT', i.ProductId, 'FULL_ROW', NULL,
+           CONCAT(
+               'SupplierId=', i.SupplierId, '; ',
+               'CountryId=', i.CountryId, '; ',
+               'DesignerId=', i.DesignerId, '; ',
+               'ColorGroupId=', i.ColorGroupId, '; ',
+               'HasBeenApproved=', i.HasBeenApproved, '; ',
+               'ApprovedBy=', i.ApprovedBy, '; ',
+               'ApprovedAt=', CONVERT(NVARCHAR, i.ApprovedAt), '; ',
+               'CurrentStep=', i.CurrentStep
+           ),
+           @User
+    FROM inserted i
+    LEFT JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE d.ProductId IS NULL;
+
+    -- ========== DELETE ==========
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'Product', 'DELETE', d.ProductId, 'FULL_ROW',
+           CONCAT(
+               'SupplierId=', d.SupplierId, '; ',
+               'CountryId=', d.CountryId, '; ',
+               'DesignerId=', d.DesignerId, '; ',
+               'ColorGroupId=', d.ColorGroupId, '; ',
+               'HasBeenApproved=', d.HasBeenApproved, '; ',
+               'ApprovedBy=', d.ApprovedBy, '; ',
+               'ApprovedAt=', CONVERT(NVARCHAR, d.ApprovedAt), '; ',
+               'CurrentStep=', d.CurrentStep
+           ),
+           NULL,
+           @User
+    FROM deleted d
+    LEFT JOIN inserted i ON d.ProductId = i.ProductId
+    WHERE i.ProductId IS NULL;
+
+    -- ========== UPDATE ==========
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'Product', 'UPDATE', i.ProductId, 'SupplierId',
+           CAST(d.SupplierId AS NVARCHAR), CAST(i.SupplierId AS NVARCHAR), @User
+    FROM inserted i JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.SupplierId, -1) <> ISNULL(d.SupplierId, -1)
+
+    UNION ALL
+    SELECT 'Product', 'UPDATE', i.ProductId, 'CountryId',
+           CAST(d.CountryId AS NVARCHAR), CAST(i.CountryId AS NVARCHAR), @User
+    FROM inserted i JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.CountryId, -1) <> ISNULL(d.CountryId, -1)
+
+    UNION ALL
+    SELECT 'Product', 'UPDATE', i.ProductId, 'DesignerId',
+           CAST(d.DesignerId AS NVARCHAR), CAST(i.DesignerId AS NVARCHAR), @User
+    FROM inserted i JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.DesignerId, -1) <> ISNULL(d.DesignerId, -1)
+
+    UNION ALL
+    SELECT 'Product', 'UPDATE', i.ProductId, 'ColorGroupId',
+           CAST(d.ColorGroupId AS NVARCHAR), CAST(i.ColorGroupId AS NVARCHAR), @User
+    FROM inserted i JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.ColorGroupId, -1) <> ISNULL(d.ColorGroupId, -1)
+
+    UNION ALL
+    SELECT 'Product', 'UPDATE', i.ProductId, 'HasBeenApproved',
+           CAST(d.HasBeenApproved AS NVARCHAR), CAST(i.HasBeenApproved AS NVARCHAR), @User
+    FROM inserted i JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.HasBeenApproved, 0) <> ISNULL(d.HasBeenApproved, 0)
+
+    UNION ALL
+    SELECT 'Product', 'UPDATE', i.ProductId, 'ApprovedBy',
+           d.ApprovedBy, i.ApprovedBy, @User
+    FROM inserted i JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.ApprovedBy, '') <> ISNULL(d.ApprovedBy, '')
+
+    UNION ALL
+    SELECT 'Product', 'UPDATE', i.ProductId, 'ApprovedAt',
+           CONVERT(NVARCHAR, d.ApprovedAt), CONVERT(NVARCHAR, i.ApprovedAt), @User
+    FROM inserted i JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.ApprovedAt, '') <> ISNULL(d.ApprovedAt, '')
+
+    UNION ALL
+    SELECT 'Product', 'UPDATE', i.ProductId, 'CurrentStep',
+           CAST(d.CurrentStep AS NVARCHAR), CAST(i.CurrentStep AS NVARCHAR), @User
+    FROM inserted i JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.CurrentStep, -1) <> ISNULL(d.CurrentStep, -1);
+END
+GO
+
+
+
+-- Audit trigger for ProductDetails
+CREATE TRIGGER trg_Audit_ProductDetails
+ON ProductDetails
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @User NVARCHAR(100) = SYSTEM_USER;
+
+    -- ========== INSERT ==========
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'ProductDetails', 'INSERT', i.ProductId, 'FULL_ROW', NULL, 
+           CONCAT(
+               'DGAItemNo=', i.DGAItemNo, '; ',
+               'ProductName=', i.ProductName, '; ',
+               'MOQ=', i.MOQ, '; ',
+               'CostPrice=', i.CostPrice, '; ',
+               'UnitPCS=', i.UnitPCS
+           ),
+           @User
+    FROM inserted i
+    LEFT JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE d.ProductId IS NULL;
+
+    -- ========== DELETE ==========
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'ProductDetails', 'DELETE', d.ProductId, 'FULL_ROW', 
+           CONCAT(
+               'DGAItemNo=', d.DGAItemNo, '; ',
+               'ProductName=', d.ProductName, '; ',
+               'MOQ=', d.MOQ, '; ',
+               'CostPrice=', d.CostPrice, '; ',
+               'UnitPCS=', d.UnitPCS
+           ),
+           NULL,
+           @User
+    FROM deleted d
+    LEFT JOIN inserted i ON d.ProductId = i.ProductId
+    WHERE i.ProductId IS NULL;
+
+    -- ========== UPDATE ==========
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'ProductDetails', 'UPDATE', i.ProductId, 'DGAItemNo',
+           d.DGAItemNo, i.DGAItemNo, @User
+    FROM inserted i
+    JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.DGAItemNo, '') <> ISNULL(d.DGAItemNo, '')
+
+    UNION ALL
+
+    SELECT 'ProductDetails', 'UPDATE', i.ProductId, 'ProductName',
+           d.ProductName, i.ProductName, @User
+    FROM inserted i
+    JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.ProductName, '') <> ISNULL(d.ProductName, '')
+
+    UNION ALL
+
+    SELECT 'ProductDetails', 'UPDATE', i.ProductId, 'MOQ',
+           CAST(d.MOQ AS NVARCHAR), CAST(i.MOQ AS NVARCHAR), @User
+    FROM inserted i
+    JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.MOQ, -1) <> ISNULL(d.MOQ, -1)
+
+    UNION ALL
+
+    SELECT 'ProductDetails', 'UPDATE', i.ProductId, 'CostPrice',
+           CAST(d.CostPrice AS NVARCHAR), CAST(i.CostPrice AS NVARCHAR), @User
+    FROM inserted i
+    JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.CostPrice, -1) <> ISNULL(d.CostPrice, -1)
+
+    UNION ALL
+
+    SELECT 'ProductDetails', 'UPDATE', i.ProductId, 'ProductDescription',
+           d.ProductDescription, i.ProductDescription, @User
+    FROM inserted i
+    JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.ProductDescription, '') <> ISNULL(d.ProductDescription, '')
+
+    UNION ALL
+
+    SELECT 'ProductDetails', 'UPDATE', i.ProductId, 'UnitPCS',
+           CAST(d.UnitPCS AS NVARCHAR), CAST(i.UnitPCS AS NVARCHAR), @User
+    FROM inserted i
+    JOIN deleted d ON i.ProductId = d.ProductId
+    WHERE ISNULL(i.UnitPCS, -1) <> ISNULL(d.UnitPCS, -1);
+END
+GO
+
+
+
+
+
 
 
 
