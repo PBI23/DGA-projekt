@@ -1,3 +1,7 @@
+-- ========================
+-- 1 DATABASE SETUP
+-- ========================
+
 -- Drop Database if exists and not in use
 IF EXISTS (SELECT name FROM sys.databases WHERE name = N'DGA_ProductDB')
 BEGIN
@@ -16,11 +20,11 @@ USE DGA_ProductDB;
 GO
 
 
------------- TABLES ------------
+-- ===================================
+-- 2 LOOKUP TABLES
+-- ===================================
 
--- ========================
--- LOOKUP-TABELLER
--- ========================
+-- Stores ISO country codes and country names
 CREATE TABLE Country (
     CountryId INT IDENTITY(1,1) PRIMARY KEY,
     CountryCode CHAR(2) NOT NULL,
@@ -28,12 +32,14 @@ CREATE TABLE Country (
 );
 GO
 
+-- Stores color groups for product classification
 CREATE TABLE ColorGroup (
     ColorGroupId INT IDENTITY(1,1) PRIMARY KEY,
     ColorGroupName NVARCHAR(100)
 );
 GO 
 
+-- Stores Pantone color codes and names
 CREATE TABLE Pantone (
     PantoneId INT IDENTITY(1,1) PRIMARY KEY,
     ColorCode NVARCHAR(50) NOT NULL,
@@ -41,6 +47,7 @@ CREATE TABLE Pantone (
 );
 GO
 
+-- Stores types of certifications applicable to products
 CREATE TABLE Certification (
     CertificationId INT IDENTITY(1,1) PRIMARY KEY,
     CertificationType NVARCHAR(100) NOT NULL,
@@ -48,15 +55,20 @@ CREATE TABLE Certification (
 );
 GO
 
--- ========================
--- ENTITETSTABELLER
--- ========================
+
+
+-- ===================================
+-- 3 CORE ENTITY TABLES
+-- ===================================
+
+-- Stores designer information
 CREATE TABLE Designer (
     DesignerId INT IDENTITY(1,1) PRIMARY KEY,
     DesignerName NVARCHAR(100) NOT NULL
 );
 GO
 
+-- Stores supplier groups (Note: [Group] is a reserved word)
 CREATE TABLE [Group] (
     GroupID INT IDENTITY(1,1) PRIMARY KEY,
     SupplierId INT,
@@ -64,6 +76,7 @@ CREATE TABLE [Group] (
 );
 GO
 
+-- Stores supplier details
 CREATE TABLE Supplier (
     SupplierId INT IDENTITY(1,1) PRIMARY KEY,
     ProductId INT,
@@ -73,6 +86,7 @@ CREATE TABLE Supplier (
 );
 GO
 
+-- Main product table
 CREATE TABLE Product (
     ProductId INT IDENTITY(1,1) PRIMARY KEY,
     SupplierId INT,
@@ -86,18 +100,10 @@ CREATE TABLE Product (
     ApprovedBy NVARCHAR(100), 
     ApprovedAt DATETIME,
     CurrentStep INT
-
 );
 GO
 
-CREATE TABLE ProductCategory (
-    ProductId INT PRIMARY KEY,
-    MainGroup NVARCHAR(100),
-    MainCategory NVARCHAR(100),
-    SubCategory NVARCHAR(100)
-);
-GO
-
+-- Stores all product details
 CREATE TABLE ProductDetails (
     ProductId INT PRIMARY KEY,
     DGAItemNo NVARCHAR(50),
@@ -124,14 +130,8 @@ CREATE TABLE ProductDetails (
 );
 GO
 
-CREATE TABLE Picture (
-    PictureId INT IDENTITY(1,1) PRIMARY KEY,
-    ProductId INT,
-    Data VARBINARY(MAX),
-    DataType NVARCHAR(100)
-);
-GO
 
+-- Stores the Product dimensions
 CREATE TABLE ProductDimensions (
     ProductDID INT IDENTITY(1,1) PRIMARY KEY,
     ProductId INT,
@@ -144,6 +144,7 @@ CREATE TABLE ProductDimensions (
 );
 GO
 
+-- Stores the package dimensions
 CREATE TABLE ProductPackageDimensions (
     ProductPDId INT IDENTITY(1,1) PRIMARY KEY,
     ProductId INT,
@@ -164,6 +165,26 @@ CREATE TABLE ProductPackageDimensions (
 );
 GO
 
+
+-- Product category classification
+CREATE TABLE ProductCategory (
+    ProductId INT PRIMARY KEY,
+    MainGroup NVARCHAR(100),
+    MainCategory NVARCHAR(100),
+    SubCategory NVARCHAR(100)
+);
+GO
+
+-- Stores product pictures
+CREATE TABLE Picture (
+    PictureId INT IDENTITY(1,1) PRIMARY KEY,
+    ProductId INT,
+    Data VARBINARY(MAX),
+    DataType NVARCHAR(100)
+);
+GO
+
+-- Stores product food contact materials
 CREATE TABLE FoodContactMaterial (
     FCMId INT IDENTITY(1,1) PRIMARY KEY,
     ProductId INT NOT NULL,
@@ -181,9 +202,12 @@ CREATE TABLE FoodContactMaterial (
 );
 GO
 
--- ========================
--- RELATIONSTABELLER
--- ========================
+
+-- ===================================
+-- 4 RELATIONSTABELLER
+-- ===================================
+
+-- Relationship between products and certifications
 CREATE TABLE ProductCertification (
     ProductId INT NOT NULL,
     CertificateId INT NOT NULL,
@@ -192,6 +216,7 @@ CREATE TABLE ProductCertification (
 );
 GO
 
+-- Relationship between products and Pantone colors
 CREATE TABLE ProductPantone (
     ProductId INT NOT NULL,
     PantoneId INT NOT NULL,
@@ -199,11 +224,34 @@ CREATE TABLE ProductPantone (
 );
 GO
 
--- ========================
--- FOREIGN KEYS
--- ========================
+GO
 
--- Product
+
+
+-- ===================================
+-- 5 SYSTEM & AUDIT TABLES
+-- ===================================
+
+
+CREATE TABLE AuditLog (
+    AuditLogID INT IDENTITY PRIMARY KEY,
+    TableName NVARCHAR(100),
+    Action NVARCHAR(20), -- e.g. INSERT, UPDATE, DELETE
+    RecordId INT,
+    FieldName NVARCHAR(100),
+    OldValue NVARCHAR(MAX),
+    NewValue NVARCHAR(MAX),
+    PerformedBy NVARCHAR(100),
+    PerformedAt DATETIME DEFAULT GETDATE()
+);
+
+
+
+-- ===================================
+-- 6 FOREIGN KEY CONSTRAINTS
+-- ===================================
+
+-- Link Product to its dependencies
 ALTER TABLE Product
 ADD CONSTRAINT FK_Product_Supplier FOREIGN KEY (SupplierId) REFERENCES Supplier(SupplierId),
     CONSTRAINT FK_Product_Country FOREIGN KEY (CountryId) REFERENCES Country(CountryId),
@@ -211,49 +259,49 @@ ADD CONSTRAINT FK_Product_Supplier FOREIGN KEY (SupplierId) REFERENCES Supplier(
     CONSTRAINT FK_Product_ColorGroup FOREIGN KEY (ColorGroupId) REFERENCES ColorGroup(ColorGroupId);
 GO
 
--- ProductDetails
+-- Link ProductDetails to Product
 ALTER TABLE ProductDetails
 ADD CONSTRAINT FK_ProductDetails_Product FOREIGN KEY (ProductId) REFERENCES Product(ProductId);
 GO
 
--- ProductCategory
+-- Link ProductCategory to Product
 ALTER TABLE ProductCategory
 ADD CONSTRAINT FK_ProductCategory_Product FOREIGN KEY (ProductId) REFERENCES Product(ProductId);
 GO
 
--- Picture
+-- Link Picture to Product
 ALTER TABLE Picture
 ADD CONSTRAINT FK_Picture_Product FOREIGN KEY (ProductId) REFERENCES Product(ProductId);
 GO
 
--- ProductDimensions
+-- Link ProductDimensions to Product
 ALTER TABLE ProductDimensions
 ADD CONSTRAINT FK_ProductDimensions_Product FOREIGN KEY (ProductId) REFERENCES Product(ProductId);
 GO
 
--- ProductPackageDimensions
+-- Link ProductPackageDimensions to Product
 ALTER TABLE ProductPackageDimensions
 ADD CONSTRAINT FK_ProductPackageDimensions_Product FOREIGN KEY (ProductId) REFERENCES Product(ProductId);
 GO
 
--- ProductCertification
+-- Link ProductCertification to Product and Certification
 ALTER TABLE ProductCertification
 ADD CONSTRAINT FK_ProductCertification_Product FOREIGN KEY (ProductId) REFERENCES Product(ProductId),
     CONSTRAINT FK_ProductCertification_Certification FOREIGN KEY (CertificateId) REFERENCES Certification(CertificationId);
 GO
 
--- ProductPantone
+-- Link ProductPantone to Product and Pantone
 ALTER TABLE ProductPantone
 ADD CONSTRAINT FK_ProductPantone_Product FOREIGN KEY (ProductId) REFERENCES Product(ProductId),
     CONSTRAINT FK_ProductPantone_Pantone FOREIGN KEY (PantoneId) REFERENCES Pantone(PantoneId);
 GO
 
--- FoodContactMaterial
+-- Link FoodContactMaterial to Product
 ALTER TABLE FoodContactMaterial
 ADD CONSTRAINT FK_FoodContactMaterial_Product FOREIGN KEY (ProductId) REFERENCES Product(ProductId);
 GO
 
--- Supplier & Group relation
+-- Link Supplier to Group (bidirectional)
 ALTER TABLE Supplier
 ADD CONSTRAINT FK_Supplier_Group FOREIGN KEY (GroupID) REFERENCES [Group](GroupID);
 GO
@@ -263,102 +311,16 @@ ADD CONSTRAINT FK_Group_Supplier FOREIGN KEY (SupplierId) REFERENCES Supplier(Su
 GO
 
 
+-- ===================================
+-- 7 STORED PROCEDURES
+-- ===================================
 
 
--- ========================
--- STORED PROCEDURES
--- ========================
+-- ===================================
+-- 7.1 STORED PROCEDURES – PRODUCT CRUD
+-- ===================================
 
-CREATE PROCEDURE spSaveFieldValue
-    @ProductId INT,
-    @FieldName NVARCHAR(100),
-    @FieldValue NVARCHAR(MAX),
-    @Step INT
-AS
-BEGIN
-    IF EXISTS (
-        SELECT 1 
-        FROM ProductFieldValue 
-        WHERE ProductId = @ProductId 
-          AND FieldName = @FieldName
-    )
-    BEGIN
-        UPDATE ProductFieldValue
-        SET FieldValue = @FieldValue
-        WHERE ProductId = @ProductId 
-          AND FieldName = @FieldName;
-    END
-    ELSE
-    BEGIN
-        INSERT INTO ProductFieldValue (ProductId, FieldName, FieldValue, Step)
-        VALUES (@ProductId, @FieldName, @FieldValue, @Step);
-    END
-END
-GO
-
-
-
-
-
-CREATE PROCEDURE spGetAllProducts
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT 
-        p.ProductId,
-        p.CreatedDate,
-        p.ModifiedDate,
-        p.SetupStage,
-        p.HasBeenApproved,
-        p.CurrentStep,
-
-        -- Leverandør
-        s.SupplierId,
-        s.Name AS SupplierName,
-
-        -- Designer
-        d.DesignerId,
-        d.DesignerName,
-
-        -- Land
-        c.CountryId,
-        c.CountryName AS CountryOfOrigin,
-
-        -- Farvegruppe
-        cg.ColorGroupId,
-        cg.ColorGroupName,
-
-        -- Detaljer
-        pd.DGAItemNo,
-        pd.ProductLogo,
-        pd.Series,
-        pd.ProductDescription,
-        pd.MOQ,
-        pd.CostPrice,
-        pd.Unit,
-        CAST(pd.UnitPCS AS NVARCHAR) AS ColiSize,
-        pd.ABC,
-        pd.HangtagsAndStickers,
-
-        -- Kategori
-        pc.MainGroup,
-        pc.MainCategory,
-        pc.SubCategory
-
-    FROM Product p
-    LEFT JOIN Supplier s ON p.SupplierId = s.SupplierId
-    LEFT JOIN Designer d ON p.DesignerId = d.DesignerId
-    LEFT JOIN Country c ON p.CountryId = c.CountryId
-    LEFT JOIN ColorGroup cg ON p.ColorGroupId = cg.ColorGroupId
-    LEFT JOIN ProductDetails pd ON p.ProductId = pd.ProductId
-    LEFT JOIN ProductCategory pc ON p.ProductId = pc.ProductId
-END
-GO
-
-
-
--- 1. Opret nyt produkt (med detaljer og kategorier)
+-- Create a new product with details and category
 CREATE PROCEDURE spCreateProduct
     @SupplierId INT,
     @CountryId INT,
@@ -396,7 +358,7 @@ BEGIN
 END
 GO
 
--- 2. Opdater produktdetaljer
+-- Update product details
 CREATE PROCEDURE spUpdateProductDetails
     @ProductId INT,
     @MOQ INT,
@@ -416,7 +378,7 @@ BEGIN
 END
 GO
 
--- 3. Godkend produkt
+-- Approve product
 CREATE OR ALTER PROCEDURE spApproveProduct
     @ProductId INT,
     @IsApproved BIT,
@@ -435,8 +397,7 @@ BEGIN
 END
 GO
 
-
--- 4. Slet produkt og tilhørende poster
+-- Delete a product and related records
 CREATE PROCEDURE spDeleteProduct
     @ProductId INT
 AS
@@ -463,7 +424,13 @@ BEGIN
 END
 GO
 
--- 5. Tilføj pantonefarve til produkt 
+
+
+-- ======================================================
+-- 7.2 STORED PROCEDURES – Supplementary Product Functions
+-- ======================================================
+
+-- Add Pantone color to a product
 CREATE PROCEDURE spAddPantoneToProduct
     @ProductId INT,
     @PantoneId INT
@@ -474,7 +441,17 @@ BEGIN
 END
 GO
 
--- 6. Tilføj certificering til produkt
+-- Add colorGroup
+CREATE PROCEDURE spAddColorGroup
+    @ColorGroupName NVARCHAR(100)
+AS
+BEGIN
+    INSERT INTO ColorGroup (ColorGroupName)
+    VALUES (@ColorGroupName);
+END
+GO
+
+-- Add certification to a product
 CREATE PROCEDURE spAddCertificationToProduct
     @ProductId INT,
     @CertificateId INT,
@@ -486,7 +463,110 @@ BEGIN
 END
 GO
 
--- 7. Hent produktinfo med detaljer og kategori
+-- Add new certification type
+CREATE PROCEDURE spAddCertification
+    @CertificationType NVARCHAR(100),
+    @Description NVARCHAR(MAX)
+AS
+BEGIN
+    INSERT INTO Certification (CertificationType, Description)
+    VALUES (@CertificationType, @Description);
+END
+GO
+
+-- Check if product exists
+CREATE PROCEDURE spProductExists
+    @ProductId INT
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM Product WHERE ProductId = @ProductId)
+        SELECT 1 AS [Exists];
+
+    ELSE
+        SELECT 0 AS [Exists];
+END
+GO
+
+-- Update product status directly
+CREATE PROCEDURE spUpdateProductStatus
+    @ProductId INT,
+    @Status NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE Product
+    SET 
+        HasBeenApproved = CASE WHEN @Status = 'Approved' THEN 1 ELSE 0 END,
+        ModifiedDate = GETDATE()
+    WHERE ProductId = @ProductId;
+END
+GO
+
+
+-- ===================================
+-- 7.3 STORED PROCEDURES – Get Product Data
+-- ===================================
+
+-- Get all products with detailed information
+CREATE PROCEDURE spGetAllProducts
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT 
+        p.ProductId,
+        p.CreatedDate,
+        p.ModifiedDate,
+        p.SetupStage,
+        p.HasBeenApproved,
+        p.CurrentStep,
+
+        -- Supplier
+        s.SupplierId,
+        s.Name AS SupplierName,
+
+        -- Designer
+        d.DesignerId,
+        d.DesignerName,
+
+        -- Country
+        c.CountryId,
+        c.CountryName AS CountryOfOrigin,
+
+        -- Colorgroup
+        cg.ColorGroupId,
+        cg.ColorGroupName,
+
+        -- Details
+        pd.DGAItemNo,
+        pd.ProductLogo,
+        pd.Series,
+        pd.ProductDescription,
+        pd.MOQ,
+        pd.CostPrice,
+        pd.Unit,
+        CAST(pd.UnitPCS AS NVARCHAR) AS ColiSize,
+        pd.ABC,
+        pd.HangtagsAndStickers,
+
+        -- Category
+        pc.MainGroup,
+        pc.MainCategory,
+        pc.SubCategory
+
+    FROM Product p
+    LEFT JOIN Supplier s ON p.SupplierId = s.SupplierId
+    LEFT JOIN Designer d ON p.DesignerId = d.DesignerId
+    LEFT JOIN Country c ON p.CountryId = c.CountryId
+    LEFT JOIN ColorGroup cg ON p.ColorGroupId = cg.ColorGroupId
+    LEFT JOIN ProductDetails pd ON p.ProductId = pd.ProductId
+    LEFT JOIN ProductCategory pc ON p.ProductId = pc.ProductId
+END
+GO
+
+
+-- Get full information for a single product
 CREATE PROCEDURE spGetProductFullInfo
     @ProductId INT
 AS
@@ -522,70 +602,73 @@ BEGIN
 END
 GO
 
-
--- 8. Tilføj ny farvegruppe
-CREATE PROCEDURE spAddColorGroup
-    @ColorGroupName NVARCHAR(100)
+-- Get all drafts (unapproved products)
+CREATE PROCEDURE spGetAllDrafts
 AS
 BEGIN
-    INSERT INTO ColorGroup (ColorGroupName)
-    VALUES (@ColorGroupName);
+    SET NOCOUNT ON;
+
+    SELECT 
+        p.ProductId,
+        pd.DGAItemNo,
+        pd.ProductDescription AS Description,
+        pd.UnitPCS AS ColiSize,
+        pd.Series AS Season,
+        pc.MainGroup AS ProductGroup,
+
+        s.Name AS Supplier,
+        d.DesignerName AS Designer,
+        c.CountryName AS CountryOfOrigin,
+
+        'Draft' AS Status,
+        pd.ProductLogo AS Name
+
+    FROM Product p
+    LEFT JOIN Supplier s ON p.SupplierId = s.SupplierId
+    LEFT JOIN Designer d ON p.DesignerId = d.DesignerId
+    LEFT JOIN Country c ON p.CountryId = c.CountryId
+    LEFT JOIN ProductDetails pd ON p.ProductId = pd.ProductId
+    LEFT JOIN ProductCategory pc ON p.ProductId = pc.ProductId
+    WHERE ISNULL(p.HasBeenApproved, 0) = 0;
 END
 GO
 
--- 9. Valider om produkt eksisterer
-CREATE PROCEDURE spProductExists
-    @ProductId INT
+-- ===================================
+-- 7.4 – STEP-BASED WORKFLOW & FIELD LOGIC
+-- ===================================
+-- This section contains all procedures for saving and retrieving step-specific product data,
+-- including support for dynamic fields and conditional logic.
+
+
+-- Save a single field value for a given step
+CREATE PROCEDURE spSaveFieldValue
+    @ProductId INT,
+    @FieldName NVARCHAR(100),
+    @FieldValue NVARCHAR(MAX),
+    @Step INT
 AS
 BEGIN
-    IF EXISTS (SELECT 1 FROM Product WHERE ProductId = @ProductId)
-        SELECT 1 AS [Exists];
-
+    IF EXISTS (
+        SELECT 1 
+        FROM ProductFieldValue 
+        WHERE ProductId = @ProductId 
+          AND FieldName = @FieldName
+    )
+    BEGIN
+        UPDATE ProductFieldValue
+        SET FieldValue = @FieldValue
+        WHERE ProductId = @ProductId 
+          AND FieldName = @FieldName;
+    END
     ELSE
-        SELECT 0 AS [Exists];
+    BEGIN
+        INSERT INTO ProductFieldValue (ProductId, FieldName, FieldValue, Step)
+        VALUES (@ProductId, @FieldName, @FieldValue, @Step);
+    END
 END
 GO
 
--- 10. Tilføj ny certificeringstype
-CREATE PROCEDURE spAddCertification
-    @CertificationType NVARCHAR(100),
-    @Description NVARCHAR(MAX)
-AS
-BEGIN
-    INSERT INTO Certification (CertificationType, Description)
-    VALUES (@CertificationType, @Description);
-END
-GO
-
-
-CREATE PROCEDURE spGetSavedFieldsForStep
-    @ProductId INT,
-    @Step INT
-AS
-BEGIN
-    SELECT 
-        FieldName,
-        FieldValue
-    FROM ProductFieldValue
-    WHERE ProductId = @ProductId AND Step = @Step;
-END
-GO
-
-
-CREATE PROCEDURE spValidateStep
-    @ProductId INT,
-    @Step INT
-AS
-BEGIN
-    SELECT 
-        fd.FieldName
-    FROM FieldDefinition fd
-    LEFT JOIN ProductFieldValue pfv
-        ON fd.FieldName = pfv.FieldName AND pfv.ProductId = @ProductId
-    WHERE fd.Step = @Step AND fd.IsRequired = 1 AND (pfv.FieldValue IS NULL OR pfv.FieldValue = '');
-END
-GO
-
+-- Save step 1: Basic product info
 CREATE PROCEDURE spSaveStep1
     @Name NVARCHAR(100),
     @Season NVARCHAR(50),
@@ -620,7 +703,7 @@ BEGIN
     VALUES (
         @ProductId,
         @DgaItemNo,
-        @Name, -- ← gem navnet her
+        @Name, 
         @Description,
         TRY_CAST(@ColiSize AS INT)
     );
@@ -630,10 +713,7 @@ BEGIN
 END
 GO
 
-
-
-
-
+-- Save step 2: JSON-formatted fields
 CREATE PROCEDURE spSaveStep2
     @ProductId INT,
     @JsonData NVARCHAR(MAX)
@@ -664,7 +744,7 @@ BEGIN
 END
 GO
 
-
+-- Save step 3: Packaging & safety
 CREATE PROCEDURE spSaveStep3
     @ProductId INT,
     @SupplierProductNo INT,
@@ -739,9 +819,7 @@ BEGIN
 END
 GO
 
-
-
-
+-- Save step 4: Color, pantone, extra info
 CREATE PROCEDURE spSaveStep4
     @ProductId INT,
     @DgaColorGroupName NVARCHAR(100),
@@ -809,30 +887,60 @@ BEGIN
 END
 GO
 
-CREATE PROCEDURE spUpdateProductStatus
+-- Validate required fields for step
+CREATE PROCEDURE spValidateStep
     @ProductId INT,
-    @Status NVARCHAR(50)
+    @Step INT
 AS
 BEGIN
-    SET NOCOUNT ON;
+    SELECT 
+        fd.FieldName
+    FROM FieldDefinition fd
+    LEFT JOIN ProductFieldValue pfv
+        ON fd.FieldName = pfv.FieldName AND pfv.ProductId = @ProductId
+    WHERE fd.Step = @Step AND fd.IsRequired = 1 AND (pfv.FieldValue IS NULL OR pfv.FieldValue = '');
+END
+GO
 
-    UPDATE Product
-    SET 
-        HasBeenApproved = CASE WHEN @Status = 'Approved' THEN 1 ELSE 0 END,
-        ModifiedDate = GETDATE()
-    WHERE ProductId = @ProductId;
+-- Get previously saved field values for step
+CREATE PROCEDURE spGetSavedFieldsForStep
+    @ProductId INT,
+    @Step INT
+AS
+BEGIN
+    SELECT 
+        FieldName,
+        FieldValue
+    FROM ProductFieldValue
+    WHERE ProductId = @ProductId AND Step = @Step;
 END
 GO
 
 
 
+-- ===================================
+-- 9. STEP-BASED FIELD VALUE STORAGE
+-- ===================================
 
--- WIP
--- ========================
--- STEP-FLOW & VALIDATION
--- ========================
+-- Stores user-entered field values per product and step
+CREATE TABLE ProductFieldValue (
+    ProductId INT NOT NULL,
+    FieldName NVARCHAR(100) NOT NULL,
+    FieldValue NVARCHAR(MAX),
+    Step INT NOT NULL,
+    PRIMARY KEY (ProductId, FieldName),
+    FOREIGN KEY (ProductId) REFERENCES Product(ProductId)
+);
+GO
 
---  FieldDefinition – styring af felter og deres regler
+
+-- ===================================
+-- 10. STEP CONFIGURATION & FIELD DEFINITION
+-- ===================================
+
+-- TABLES: Define fields and dependencies for steps
+
+-- -- Defines what fields are available per step, including validation rules
 CREATE TABLE FieldDefinition (
     FieldDefinitionId INT IDENTITY(1,1) PRIMARY KEY,
     FieldName NVARCHAR(100) NOT NULL,
@@ -845,7 +953,7 @@ CREATE TABLE FieldDefinition (
 );
 GO
 
---  FieldDependency – regler for afhængige felter
+-- Describes conditional field relationships (i.e. show/hide logic)
 CREATE TABLE FieldDependency (
     FieldDependencyID INT IDENTITY(1,1) PRIMARY KEY,
     ParentField NVARCHAR(100) NOT NULL,
@@ -856,29 +964,7 @@ CREATE TABLE FieldDependency (
 GO
 
 
-
-
--- ========================
--- GEMTE FELTVÆRDIER PER PRODUKT
--- ========================
-CREATE TABLE ProductFieldValue (
-    ProductId INT NOT NULL,
-    FieldName NVARCHAR(100) NOT NULL,
-    FieldValue NVARCHAR(MAX),
-    Step INT NOT NULL,
-    PRIMARY KEY (ProductId, FieldName),
-    FOREIGN KEY (ProductId) REFERENCES Product(ProductId)
-);
-GO
-
-
-
-
--- ========================
--- STORED PROCEDURES: FELTDEFINITION OG FLOW
--- ========================
-
--- Hent alle felter for et givent trin
+-- PROCEDURES: Get fields and dependent fields for a step
 CREATE PROCEDURE spGetFieldsForStep
     @Step INT
 AS
@@ -896,8 +982,6 @@ BEGIN
 END
 GO
 
-
--- Hent afhængige felter baseret på et felt og værdi
 CREATE PROCEDURE spGetDependentFields
     @ParentField NVARCHAR(100),
     @TriggerValue NVARCHAR(50),
@@ -924,38 +1008,6 @@ GO
 
 
 
-DROP PROCEDURE IF EXISTS spGetAllDrafts;
-GO
-
-CREATE PROCEDURE spGetAllDrafts
-AS
-BEGIN
-    SET NOCOUNT ON;
-
-    SELECT 
-        p.ProductId,
-        pd.DGAItemNo,
-        pd.ProductDescription AS Description,
-        pd.UnitPCS AS ColiSize,
-        pd.Series AS Season,
-        pc.MainGroup AS ProductGroup,
-
-        s.Name AS Supplier,
-        d.DesignerName AS Designer,
-        c.CountryName AS CountryOfOrigin,
-
-        'Draft' AS Status,
-        pd.ProductLogo AS Name
-
-    FROM Product p
-    LEFT JOIN Supplier s ON p.SupplierId = s.SupplierId
-    LEFT JOIN Designer d ON p.DesignerId = d.DesignerId
-    LEFT JOIN Country c ON p.CountryId = c.CountryId
-    LEFT JOIN ProductDetails pd ON p.ProductId = pd.ProductId
-    LEFT JOIN ProductCategory pc ON p.ProductId = pc.ProductId
-    WHERE ISNULL(p.HasBeenApproved, 0) = 0;
-END
-GO
 
 
 
