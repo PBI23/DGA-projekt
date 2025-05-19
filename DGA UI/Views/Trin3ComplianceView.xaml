@@ -1,0 +1,444 @@
+﻿<UserControl x:Class="ProduktOprettelse.Views.Trin3ComplianceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ProduktOprettelse.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+   
+        <StackPanel Orientation="Vertical">
+
+            <!-- FKM Section -->
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="Food Contact Material (FKM)" FontWeight="Bold" Margin="0,0,0,15" FontSize="20"/>
+                <TextBlock Text="Er dette produkt beregnet til kontakt med fødevarer?" Margin="0,0,0,10" FontSize="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                    <RadioButton x:Name="rbFKMJa" Content="Ja" Margin="0,0,30,0" Checked="rbFKMJa_Checked" FontSize="16"/>
+                    <RadioButton x:Name="rbFKMNej" Content="Nej" IsChecked="True" Checked="rbFKMNej_Checked" FontSize="16"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spFKMQuestions" Margin="0,10,0,0" Visibility="Collapsed">
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="1. Er produktet i overensstemmelse med Food Contact Materials Framework Regulation (EC) 1935/2004?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q1Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q1" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q1Nej" Content="Nej" GroupName="FKM_Q1" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="2. Er produktet i overensstemmelse med Good Manufacturing Practice for FCM Regulation (EC) 2023/2006?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q2Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q2" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q2Nej" Content="Nej" GroupName="FKM_Q2" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="3. Er produktet i overensstemmelse med Plastic FCM Regulation (EU) 10/2011?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q3Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q3" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q3Nej" Content="Nej" GroupName="FKM_Q3" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="4. Er produktet i overensstemmelse med Restriction of Use of Certain Epoxy Derivatives in FCM Regulation (EC) 1895/2005?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q4Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q4" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q4Nej" Content="Nej" GroupName="FKM_Q4" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="5. Er produktet i overensstemmelse med Recycled Plastic FCM Regulation (EU) 2022/1616?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q5Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q5" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q5Nej" Content="Nej" GroupName="FKM_Q5" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="6. Er produktet i overensstemmelse med Ceramic FCM Directive 84/500/EEC?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q6Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q6" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q6Nej" Content="Nej" GroupName="FKM_Q6" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="7. Er produktet i overensstemmelse med Active and Intelligent FCM Regulation (EC) 450/2009?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q7Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q7" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q7Nej" Content="Nej" GroupName="FKM_Q7" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="8. Er produktet i overensstemmelse med Regenerated Cellulose Film FCM Directive 2007/42/EC?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q8Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q8" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q8Nej" Content="Nej" GroupName="FKM_Q8" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="9. Er produktet i overensstemmelse med Use of Bisphenol A in FCM Regulation (EU) 2024/3190?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q9Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q9" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q9Nej" Content="Nej" GroupName="FKM_Q9" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="10. Er produktet i overensstemmelse med Use of Bisphenol A in Varnishes and Coatings Regulation (EU) 2018/213?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q10Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q10" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q10Nej" Content="Nej" GroupName="FKM_Q10" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                    <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="11. Er produktet i overensstemmelse med Polyamide and Melamine Plastic Kitchenware from China or Hong Kong SAR (China) Regulation (EU) 284/2011?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                            <StackPanel Orientation="Horizontal">
+                                <RadioButton x:Name="rbFKM_Q11Ja" Content="Ja" Margin="0,0,30,0" GroupName="FKM_Q11" FontSize="16"/>
+                                <RadioButton x:Name="rbFKM_Q11Nej" Content="Nej" GroupName="FKM_Q11" FontSize="16" IsChecked="True"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </StackPanel>
+
+            <Separator Margin="0,10,0,20"/>
+
+            <!-- Elektronik Section -->
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="Elektronik" FontWeight="Bold" Margin="0,0,0,15" FontSize="20"/>
+                <TextBlock Text="Indeholder dette produkt elektroniske komponenter?" Margin="0,0,0,10" FontSize="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                    <RadioButton x:Name="rbElektronikJa" Content="Ja" Margin="0,0,30,0" Checked="rbElektronikJa_Checked" FontSize="16"/>
+                    <RadioButton x:Name="rbElektronikNej" Content="Nej" IsChecked="True" Checked="rbElektronikNej_Checked" FontSize="16"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spElektronikQuestions" Margin="0,10,0,0" Visibility="Collapsed">
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="1. Er produktet i overensstemmelse med Electromagnetic Compatibility Directive 2014/30/EU?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q1Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q1" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q1Nej" Content="Nej" GroupName="Elektronik_Q1" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="2. Er produktet i overensstemmelse med RoHS Directive 2011/65/EU?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q2Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q2" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q2Nej" Content="Nej" GroupName="Elektronik_Q2" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="3. Er produktet i overensstemmelse med Waste Electrical and Electronic Equipment Directive 2012/19/EU?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q3Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q3" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q3Nej" Content="Nej" GroupName="Elektronik_Q3" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="4. Er produktet i overensstemmelse med Low Voltage Directive 2014/35/EU?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q4Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q4" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q4Nej" Content="Nej" GroupName="Elektronik_Q4" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="5. Er produktet i overensstemmelse med Radio Equipment Directive 2014/53/EU?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q5Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q5" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q5Nej" Content="Nej" GroupName="Elektronik_Q5" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="6. Er produktet i overensstemmelse med Ecodesign Directive 2009/125/EC?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q6Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q6" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q6Nej" Content="Nej" GroupName="Elektronik_Q6" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="7. Er produktet i overensstemmelse med Energy Labelling Framework Regulation (EU) 2017/1369?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q7Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q7" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q7Nej" Content="Nej" GroupName="Elektronik_Q7" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="8. Er produktet i overensstemmelse med Cyber Resilience Act (Regulation (EU) 2024/2847)?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q8Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q8" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q8Nej" Content="Nej" GroupName="Elektronik_Q8" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="9. Er produktet i overensstemmelse med Batteries and Accumulators Directive 2006/66/EC?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q9Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q9" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q9Nej" Content="Nej" GroupName="Elektronik_Q9" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="10. Er produktet i overensstemmelse med Batteries Regulation (EU) 2023/1542?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q10Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q10" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q10Nej" Content="Nej" GroupName="Elektronik_Q10" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="11. Er produktet i overensstemmelse med UN Manual of Tests and Criteria - Section 38.3?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbElektronik_Q11Ja" Content="Ja" Margin="0,0,30,0" GroupName="Elektronik_Q11" FontSize="16"/>
+                                    <RadioButton x:Name="rbElektronik_Q11Nej" Content="Nej" GroupName="Elektronik_Q11" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                
+            </StackPanel>
+
+            <Separator Margin="0,10,0,20"/>
+
+            <!-- Træ Section -->
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="Træ" FontWeight="Bold" Margin="0,0,0,15" FontSize="20"/>
+                <TextBlock Text="Indeholder dette produkt trækomponenter?" Margin="0,0,0,10" FontSize="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                    <RadioButton x:Name="rbTraeJa" Content="Ja" Margin="0,0,30,0" Checked="rbTraeJa_Checked" FontSize="16"/>
+                    <RadioButton x:Name="rbTraeNej" Content="Nej" IsChecked="True" Checked="rbTraeNej_Checked" FontSize="16"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spTraeQuestions" Margin="0,10,0,0" Visibility="Collapsed">
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="1. Er produktet i overensstemmelse med Timber Regulation (EU) No 995/2010?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbTrae_Q1Ja" Content="Ja" Margin="0,0,30,0" GroupName="Trae_Q1" FontSize="16"/>
+                                    <RadioButton x:Name="rbTrae_Q1Nej" Content="Nej" GroupName="Trae_Q1" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="2. Er produktet i overensstemmelse med Deforestation Regulation (EU) 2023/1115?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbTrae_Q2Ja" Content="Ja" Margin="0,0,30,0" GroupName="Trae_Q2" FontSize="16"/>
+                                    <RadioButton x:Name="rbTrae_Q2Nej" Content="Nej" GroupName="Trae_Q2" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="3. Er produktet i overensstemmelse med Protective Measures Against Pests of Plants Regulation (EU) 2016/2031?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbTrae_Q3Ja" Content="Ja" Margin="0,0,30,0" GroupName="Trae_Q3" FontSize="16"/>
+                                    <RadioButton x:Name="rbTrae_Q3Nej" Content="Nej" GroupName="Trae_Q3" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                
+            </StackPanel>
+
+            <Separator Margin="0,10,0,20"/>
+
+            <!-- Kosmetik Section -->
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="Kosmetik" FontWeight="Bold" Margin="0,0,0,15" FontSize="20"/>
+                <TextBlock Text="Er dette produkt et kosmetisk produkt?" Margin="0,0,0,10" FontSize="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                    <RadioButton x:Name="rbKosmetikJa" Content="Ja" Margin="0,0,30,0" Checked="rbKosmetikJa_Checked" FontSize="16"/>
+                    <RadioButton x:Name="rbKosmetikNej" Content="Nej" IsChecked="True" Checked="rbKosmetikNej_Checked" FontSize="16"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spKosmetikQuestions" Margin="0,10,0,0" Visibility="Collapsed">
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="1. Er produktet i overensstemmelse med Cosmetic Products Regulation (EC) 1223/2009?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbKosmetik_Q1Ja" Content="Ja" Margin="0,0,30,0" GroupName="Kosmetik_Q1" FontSize="16"/>
+                                    <RadioButton x:Name="rbKosmetik_Q1Nej" Content="Nej" GroupName="Kosmetik_Q1" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                
+            </StackPanel>
+
+            <Separator Margin="0,10,0,20"/>
+
+            <!-- REACH Section -->
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="REACH" FontWeight="Bold" Margin="0,0,0,15" FontSize="20"/>
+                <TextBlock Text="Er dette produkt omfattet af REACH-forordningen?" Margin="0,0,0,10" FontSize="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                    <RadioButton x:Name="rbREACHJa" Content="Ja" Margin="0,0,30,0" Checked="rbREACHJa_Checked" FontSize="16"/>
+                    <RadioButton x:Name="rbREACHNej" Content="Nej" IsChecked="True" Checked="rbREACHNej_Checked" FontSize="16"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spREACHQuestions" Margin="0,10,0,0" Visibility="Collapsed">
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="1. Er produktet i overensstemmelse med REACH Regulation (EC) 1907/2006 - Substances and Mixtures?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbREACH_Q1Ja" Content="Ja" Margin="0,0,30,0" GroupName="REACH_Q1" FontSize="16"/>
+                                    <RadioButton x:Name="rbREACH_Q1Nej" Content="Nej" GroupName="REACH_Q1" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                
+            </StackPanel>
+
+            <Separator Margin="0,10,0,20"/>
+
+            <!-- Børn Section -->
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="Børn (Legetøj og lignende)" FontWeight="Bold" Margin="0,0,0,15" FontSize="20"/>
+                <TextBlock Text="Er dette produkt beregnet til børn?" Margin="0,0,0,10" FontSize="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                    <RadioButton x:Name="rbBoernJa" Content="Ja" Margin="0,0,30,0" Checked="rbBoernJa_Checked" FontSize="16"/>
+                    <RadioButton x:Name="rbBoernNej" Content="Nej" IsChecked="True" Checked="rbBoernNej_Checked" FontSize="16"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spBoernQuestions" Margin="0,10,0,0" Visibility="Collapsed">
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="1. Er produktet i overensstemmelse med Toy Safety Directive 2009/48/EC?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbBoern_Q1Ja" Content="Ja" Margin="0,0,30,0" GroupName="Boern_Q1" FontSize="16"/>
+                                    <RadioButton x:Name="rbBoern_Q1Nej" Content="Nej" GroupName="Boern_Q1" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="2. Er produktet i overensstemmelse med Teats and Soothers Directive 93/11/EEC?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbBoern_Q2Ja" Content="Ja" Margin="0,0,30,0" GroupName="Boern_Q2" FontSize="16"/>
+                                    <RadioButton x:Name="rbBoern_Q2Nej" Content="Nej" GroupName="Boern_Q2" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                
+            </StackPanel>
+
+            <Separator Margin="0,10,0,20"/>
+
+            <!-- Tekstiler Section -->
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="Tekstiler" FontWeight="Bold" Margin="0,0,0,15" FontSize="20"/>
+                <TextBlock Text="Indeholder dette produkt tekstiler?" Margin="0,0,0,10" FontSize="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                    <RadioButton x:Name="rbTekstilerJa" Content="Ja" Margin="0,0,30,0" Checked="rbTekstilerJa_Checked" FontSize="16"/>
+                    <RadioButton x:Name="rbTekstilerNej" Content="Nej" IsChecked="True" Checked="rbTekstilerNej_Checked" FontSize="16"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spTekstilerQuestions" Margin="0,10,0,0" Visibility="Collapsed">
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="1. Er produktet i overensstemmelse med Textile Labelling and Fibre Composition Regulation (EU) 1007/2011?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbTekstiler_Q1Ja" Content="Ja" Margin="0,0,30,0" GroupName="Tekstiler_Q1" FontSize="16"/>
+                                    <RadioButton x:Name="rbTekstiler_Q1Nej" Content="Nej" GroupName="Tekstiler_Q1" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+               
+            </StackPanel>
+
+            <Separator Margin="0,10,0,20"/>
+
+            <!-- Generelle Forordninger Section -->
+            <StackPanel Margin="0,0,0,20">
+                <TextBlock Text="Generelle Forordninger" FontWeight="Bold" Margin="0,0,0,15" FontSize="20"/>
+                <TextBlock Text="Er dette produkt omfattet af generelle produktforordninger?" Margin="0,0,0,10" FontSize="16"/>
+                <StackPanel Orientation="Horizontal" Margin="0,5,0,10">
+                    <RadioButton x:Name="rbGenerelleJa" Content="Ja" Margin="0,0,30,0" Checked="rbGenerelleJa_Checked" FontSize="16"/>
+                    <RadioButton x:Name="rbGenerelleNej" Content="Nej" IsChecked="True" Checked="rbGenerelleNej_Checked" FontSize="16"/>
+                </StackPanel>
+
+                <StackPanel x:Name="spGenerelleQuestions" Margin="0,10,0,0" Visibility="Collapsed">
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="1. Er produktet i overensstemmelse med General Product Safety Regulation (EU) 2023/988?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbGenerelle_Q1Ja" Content="Ja" Margin="0,0,30,0" GroupName="Generelle_Q1" FontSize="16"/>
+                                    <RadioButton x:Name="rbGenerelle_Q1Nej" Content="Nej" GroupName="Generelle_Q1" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="2. Er produktet i overensstemmelse med Ecodesign for Sustainable Products Regulation (EU) 2024/1781?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbGenerelle_Q2Ja" Content="Ja" Margin="0,0,30,0" GroupName="Generelle_Q2" FontSize="16"/>
+                                    <RadioButton x:Name="rbGenerelle_Q2Nej" Content="Nej" GroupName="Generelle_Q2" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="3. Er produktet i overensstemmelse med Waste Framework Directive 2008/98/EC?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbGenerelle_Q3Ja" Content="Ja" Margin="0,0,30,0" GroupName="Generelle_Q3" FontSize="16"/>
+                                    <RadioButton x:Name="rbGenerelle_Q3Nej" Content="Nej" GroupName="Generelle_Q3" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Margin="0,5,0,20" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="4. Er produktet i overensstemmelse med CBAM Carbon Border Adjustment Mechanism Regulation (EU) 2023/956?" TextWrapping="Wrap" Margin="0,0,0,10" FontSize="16"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <RadioButton x:Name="rbGenerelle_Q4Ja" Content="Ja" Margin="0,0,30,0" GroupName="Generelle_Q4" FontSize="16"/>
+                                    <RadioButton x:Name="rbGenerelle_Q4Nej" Content="Nej" GroupName="Generelle_Q4" FontSize="16" IsChecked="True"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                
+            </StackPanel>
+        </StackPanel>
+    
+</UserControl>

@@ -4,205 +4,61 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ProduktOprettelse"
+        xmlns:views="clr-namespace:ProduktOprettelse.Views"
         mc:Ignorable="d"
-        Title="Det Gamle Apotek - Produktoprettelse" Height="650" Width="900">
+        Title="Produkt Oprettelse" Height="Auto" Width="Auto">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <Border Background="#E0E0E0" Padding="10" Grid.Row="0">
-            <TextBlock Text="Produktoprettelse" FontSize="28" FontWeight="Bold" HorizontalAlignment="Center"/>
-        </Border>
+        <!-- Header med trin-knapper -->
+        <StackPanel Grid.Row="0" Background="#F5F5F5" Margin="0,0,0,10">
+            <TextBlock Text="Produkt Oprettelse" FontSize="24" FontWeight="Bold" Margin="20,15,0,15" Foreground="#333333"/>
 
-        <!-- Step Navigation -->
-        <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Margin="0,20,0,20">
-            <Button x:Name="btnTrin1" Content="Trin 1: Basisoplysninger" Width="160" Height="40" Margin="5" 
-                    Background="#4CAF50" Foreground="White" Click="btnTrin1_Click" FontSize="13" FontWeight="SemiBold"/>
-            <Button x:Name="btnTrin2" Content="Trin 2: Produkt-info" Width="160" Height="40" Margin="5"
-                    Background="#E0E0E0" Click="btnTrin2_Click" FontSize="13" FontWeight="SemiBold"/>
-            <Button x:Name="btnTrin3" Content="Trin 3: Obligatoriske-felter" Width="160" Height="40" Margin="5"
-                    Background="#E0E0E0" Click="btnTrin3_Click" FontSize="13" FontWeight="SemiBold"/>
-            <Button x:Name="btnTrin4" Content="Trin 4: Valgfri-felter" Width="160" Height="40" Margin="5"
-                    Background="#E0E0E0" Click="btnTrin4_Click" FontSize="13" FontWeight="SemiBold"/>
+            <StackPanel Orientation="Horizontal" Margin="20,0,20,15">
+                <Button x:Name="btnTrin1" Content="1. Basisoplysninger" Padding="10,5" Margin="0,0,5,0" Click="btnTrin_Click" Tag="Trin1" 
+                        Width="180" Background="#4CAF50" Foreground="White" BorderThickness="0" />
+
+                <Button x:Name="btnTrin2" Content="2. Produktinfo" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin2" 
+                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+
+                <Button x:Name="btnTrin3" Content="3. Compliance" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin3" 
+                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+
+                <Button x:Name="btnTrin4" Content="4. Obligatoriske felter" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin4" 
+                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+
+                <Button x:Name="btnTrin5" Content="5. Valgfri felter" Padding="10,5" Margin="5,0,0,0" Click="btnTrin_Click" Tag="Trin5" 
+                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+            </StackPanel>
         </StackPanel>
 
-        <!-- Content Area - Using a Grid to switch between different steps -->
-        <Grid Grid.Row="2" Margin="20">
-            <!-- Trin 1: Basisoplysninger -->
-            <Grid x:Name="gridTrin1" Visibility="Visible">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+        <!-- Indhold container -->
+        <Border Grid.Row="1" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" Margin="20,0,20,10" Padding="20">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <!-- Trin 1: Basisoplysninger -->
+                    <views:Trin1BasisoplysningerView x:Name="ucTrin1Basisoplysninger" Visibility="Visible" />
 
-                <!-- Labels -->
-                <TextBlock Text="Produktnavn" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
-                <TextBlock Text="Sæson" FontWeight="SemiBold" Grid.Row="1" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
-                <TextBlock Text="DGA varenummer" FontWeight="SemiBold" Grid.Row="2" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
-                <TextBlock Text="Oprindelsesland" FontWeight="SemiBold" Grid.Row="3" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
-                <TextBlock Text="Leverandør" FontWeight="SemiBold" Grid.Row="4" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
-                <TextBlock Text="Designer" FontWeight="SemiBold" Grid.Row="5" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
-                <TextBlock Text="Beskrivelse" FontWeight="SemiBold" Grid.Row="6" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
-                <TextBlock Text="Coli-størrelse-antal" FontWeight="SemiBold" Grid.Row="7" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+                    <!-- Trin 2: Produktinfo -->
+                    <views:Trin2ProduktInfoView x:Name="ucTrin2ProduktInfo" Visibility="Collapsed" />
 
-                <!-- Input Fields -->
-                <TextBox x:Name="txtProduktNavn" Grid.Row="0" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
-                <ComboBox x:Name="cmbSaeson" Grid.Row="1" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14">
-                    <ComboBoxItem Content="Forår"/>
-                    <ComboBoxItem Content="Sommer"/>
-                    <ComboBoxItem Content="Efterår"/>
-                    <ComboBoxItem Content="Vinter"/>
-                    <ComboBoxItem Content="Jul"/>
-                    <ComboBoxItem Content="Påske"/>
-                    <ComboBoxItem Content="Hele året"/>
-                </ComboBox>
-                <TextBox x:Name="txtVareNummer" Grid.Row="2" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
-                <ComboBox x:Name="cmbOprindelsesland" Grid.Row="3" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14">
-                    <ComboBoxItem Content="Danmark"/>
-                    <ComboBoxItem Content="Sverige"/>
-                    <ComboBoxItem Content="Norge"/>
-                    <ComboBoxItem Content="Tyskland"/>
-                    <ComboBoxItem Content="Kina"/>
-                    <ComboBoxItem Content="Indien"/>
-                    <ComboBoxItem Content="Andet"/>
-                </ComboBox>
-                <TextBox x:Name="txtLeverandoer" Grid.Row="4" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
-                <TextBox x:Name="txtDesigner" Grid.Row="5" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
-                <TextBox x:Name="txtBeskrivelse" Grid.Row="6" Grid.Column="1" Height="60" Margin="0,5,0,5" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto" FontSize="14"/>
-                <TextBox x:Name="txtColiStoerrelseAntal" Grid.Row="7" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericOnly" FontSize="14"/>
-            </Grid>
+                    <!-- Trin 3: Compliance -->
+                    <views:Trin3ComplianceView x:Name="ucTrin3Compliance" Visibility="Collapsed" />
 
-            <!-- Trin 2: Produkt-info -->
-            <Grid x:Name="gridTrin2" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
+                    <!-- Trin 4: Obligatoriske felter -->
+                    <views:Trin4ObligatoriskeFelterView x:Name="ucTrin4ObligatoriskeFelter" Visibility="Collapsed" />
 
-                <!-- Labels -->
-                <TextBlock Text="Kategori" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Farve" FontWeight="SemiBold" Grid.Row="1" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Materiale" FontWeight="SemiBold" Grid.Row="2" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Højde (cm)" FontWeight="SemiBold" Grid.Row="3" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Bredde (cm)" FontWeight="SemiBold" Grid.Row="4" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Dybde (cm)" FontWeight="SemiBold" Grid.Row="5" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
+                    <!-- Trin 5: Valgfri felter -->
+                    <views:Trin5ValgfriFelterView x:Name="ucTrin5ValgfriFelter" Visibility="Collapsed" />
+                </Grid>
+            </ScrollViewer>
+        </Border>
 
-                <!-- Input Fields -->
-                <ComboBox x:Name="cmbKategori" Grid.Row="0" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center">
-                    <ComboBoxItem Content="Dekoration"/>
-                    <ComboBoxItem Content="Boligtilbehør"/>
-                    <ComboBoxItem Content="Køkken"/>
-                    <ComboBoxItem Content="Julepynt"/>
-                    <ComboBoxItem Content="Påskepynt"/>
-                </ComboBox>
-                <ComboBox x:Name="cmbFarve" Grid.Row="1" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center">
-                    <ComboBoxItem Content="Rød"/>
-                    <ComboBoxItem Content="Grøn"/>
-                    <ComboBoxItem Content="Blå"/>
-                    <ComboBoxItem Content="Gul"/>
-                    <ComboBoxItem Content="Sort"/>
-                    <ComboBoxItem Content="Hvid"/>
-                    <ComboBoxItem Content="Multifarvet"/>
-                </ComboBox>
-                <ComboBox x:Name="cmbMateriale" Grid.Row="2" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center">
-                    <ComboBoxItem Content="Træ"/>
-                    <ComboBoxItem Content="Metal"/>
-                    <ComboBoxItem Content="Plastik"/>
-                    <ComboBoxItem Content="Glas"/>
-                    <ComboBoxItem Content="Stof"/>
-                    <ComboBoxItem Content="Keramik"/>
-                </ComboBox>
-                <TextBox x:Name="txtHoejde" Grid.Row="3" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal"/>
-                <TextBox x:Name="txtBredde" Grid.Row="4" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal"/>
-                <TextBox x:Name="txtDybde" Grid.Row="5" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal"/>
-            </Grid>
-
-            <!-- Trin 3: Obligatoriske-felter -->
-            <Grid x:Name="gridTrin3" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <!-- Labels -->
-                <TextBlock Text="Kostpris (DKK)" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Salgspris (DKK)" FontWeight="SemiBold" Grid.Row="1" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Momspligtig" FontWeight="SemiBold" Grid.Row="2" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Startdato" FontWeight="SemiBold" Grid.Row="3" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Slutdato" FontWeight="SemiBold" Grid.Row="4" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="På lager" FontWeight="SemiBold" Grid.Row="5" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-
-                <!-- Input Fields -->
-                <TextBox x:Name="txtKostpris" Grid.Row="0" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal"/>
-                <TextBox x:Name="txtSalgspris" Grid.Row="1" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal"/>
-                <CheckBox x:Name="chkMomspligtig" Grid.Row="2" Grid.Column="1" Margin="0,15,0,5" IsChecked="True"/>
-                <DatePicker x:Name="dpStartdato" Grid.Row="3" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center"/>
-                <DatePicker x:Name="dpSlutdato" Grid.Row="4" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center"/>
-                <CheckBox x:Name="chkPaaLager" Grid.Row="5" Grid.Column="1" Margin="0,15,0,5" IsChecked="True"/>
-            </Grid>
-
-            <!-- Trin 4: Valgfri-felter -->
-            <Grid x:Name="gridTrin4" Visibility="Collapsed">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-
-                <!-- Labels -->
-                <TextBlock Text="Barcode/EAN" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Leverandør Varenummer" FontWeight="SemiBold" Grid.Row="1" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Rabatkode" FontWeight="SemiBold" Grid.Row="2" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Tags/Søgeord" FontWeight="SemiBold" Grid.Row="3" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-                <TextBlock Text="Bemærkninger" FontWeight="SemiBold" Grid.Row="4" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center"/>
-
-                <!-- Input Fields -->
-                <TextBox x:Name="txtBarcode" Grid.Row="0" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericOnly"/>
-                <TextBox x:Name="txtLeverandoerVarenummer" Grid.Row="1" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center"/>
-                <TextBox x:Name="txtRabatkode" Grid.Row="2" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center"/>
-                <TextBox x:Name="txtTags" Grid.Row="3" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center"/>
-                <TextBox x:Name="txtBemaerkninger" Grid.Row="4" Grid.Column="1" Height="60" Margin="0,5,0,5" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
-            </Grid>
-        </Grid>
-
-        <!-- Footer with navigation buttons -->
+        <!-- Footer med navigations-knapper -->
         <Grid Grid.Row="3" Background="#F0F0F0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
@@ -212,7 +68,7 @@
             </Grid.ColumnDefinitions>
 
             <Button x:Name="btnTilbage" Content="Tilbage" Width="120" Height="40" Grid.Column="0" Margin="20,10" HorizontalAlignment="Left" Click="btnTilbage_Click" FontSize="14"/>
-            <Button x:Name="btnGemKladde" Content="Gem som kladde" Width="120" Height="40" Grid.Column="1" Margin="20,10" Click="btnGemKladde_Click" FontSize="14"/>
+            <Button x:Name="btnGemKladde" Content="Gem som kladde" Width="120" Height="40" Grid.Column="1" Margin="20,10" Click="btnGemKladde_Click" FontSize="14" IsEnabled="False" Visibility="Hidden"/>
             <Button x:Name="btnNaeste" Content="Næste" Width="120" Height="40" Grid.Column="3" Margin="20,10" HorizontalAlignment="Right" Background="#4CAF50" Foreground="White" Click="btnNaeste_Click" FontSize="14"/>
         </Grid>
     </Grid>

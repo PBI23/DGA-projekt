@@ -55,6 +55,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Services\ValidationService.cs" />
+    <Compile Include="Views\Trin1BasisoplysningerView.xaml.cs">
+      <DependentUpon>Trin1BasisoplysningerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Trin2ProduktInfoView.xaml.cs">
+      <DependentUpon>Trin2ProduktInfoView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Trin3ComplianceView.xaml.cs">
+      <DependentUpon>Trin3ComplianceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Trin4ObligatoriskeFelterView.xaml.cs">
+      <DependentUpon>Trin4ObligatoriskeFelterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Trin5ValgfriFelterView.xaml.cs">
+      <DependentUpon>Trin5ValgfriFelterView.xaml</DependentUpon>
+    </Compile>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -63,10 +79,31 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DataModels.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Trin1BasisoplysningerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Trin2ProduktInfoView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Trin3ComplianceView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Trin4ObligatoriskeFelterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Trin5ValgfriFelterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
