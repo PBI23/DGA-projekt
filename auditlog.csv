@@ -1,9 +1,0 @@
-AuditLogID,TableName,Action,RecordId,FieldName,OldValue,NewValue,PerformedBy,PerformedAt
-----------,---------,------,--------,---------,--------,--------,-----------,-----------
-1,Product,INSERT,1,FULL_ROW,NULL,SupplierId=1; CountryId=1; DesignerId=1; ColorGroupId=2; HasBeenApproved=0; ApprovedBy=; ApprovedAt=; CurrentStep=1,sa,2025-05-19 20:59:26.207
-2,ProductDetails,INSERT,1,FULL_ROW,NULL,DGAItemNo=DGA-001; ProductName=; MOQ=50; CostPrice=22.50; UnitPCS=6,sa,2025-05-19 20:59:26.227
-3,Product,INSERT,2,FULL_ROW,NULL,SupplierId=2; CountryId=2; DesignerId=2; ColorGroupId=1; HasBeenApproved=1; ApprovedBy=; ApprovedAt=; CurrentStep=4,sa,2025-05-19 20:59:26.233
-4,ProductDetails,INSERT,2,FULL_ROW,NULL,DGAItemNo=DGA-002; ProductName=; MOQ=100; CostPrice=14.95; UnitPCS=12,sa,2025-05-19 20:59:26.233
-5,Product,INSERT,3,FULL_ROW,NULL,SupplierId=1; CountryId=1; DesignerId=1; ColorGroupId=1; HasBeenApproved=0; ApprovedBy=; ApprovedAt=; CurrentStep=,sa,2025-05-19 21:00:15.500
-
-(5 rows affected)
