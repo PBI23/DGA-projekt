@@ -1,6 +1,6 @@
 -- ===============================================================
 -- setup.sql – Database Initialization Script for Microsoft SQL Server
--- Project: DGA Product Database
+-- Project: DGA Product Creation
 -- Description:
 --   This script creates all necessary database objects including:
 --   - Tables and relationships
