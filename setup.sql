@@ -1,3 +1,24 @@
+-- ===============================================================
+-- setup.sql – Database Initialization Script for Microsoft SQL Server
+-- Project: DGA Product Database
+-- Description:
+--   This script creates all necessary database objects including:
+--   - Tables and relationships
+--   - Lookup and entity structures
+--   - Foreign keys and constraints
+--   - Stored procedures and step-based workflow logic
+--   - Audit logging triggers for data traceability
+--
+-- Requirements:
+--   Microsoft SQL Server 2017 or later (Express or Standard Edition)
+--   Collation: Latin1_General_BIN2 (binary, case-sensitive)
+--
+-- Author: [PBI23]
+-- Date: [21/05 2025]
+-- Note: This script is **not compatible with MySQL or PostgreSQL**
+-- ===============================================================
+
+
 -- ========================
 -- 1 DATABASE SETUP
 -- ========================
@@ -1205,6 +1226,109 @@ GO
 
 
 
+-- Audit trigger for Suplier
+CREATE OR ALTER TRIGGER trg_Audit_Supplier
+ON Supplier
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @User NVARCHAR(100) = SYSTEM_USER;
+
+    -- INSERT
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'Supplier', 'INSERT', i.SupplierId, 'FULL_ROW', NULL,
+           CONCAT('SupplierNo=', i.SupplierNo, '; Name=', i.Name), @User
+    FROM inserted i
+    LEFT JOIN deleted d ON i.SupplierId = d.SupplierId
+    WHERE d.SupplierId IS NULL;
+
+    -- DELETE
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'Supplier', 'DELETE', d.SupplierId, 'FULL_ROW',
+           CONCAT('SupplierNo=', d.SupplierNo, '; Name=', d.Name), NULL, @User
+    FROM deleted d
+    LEFT JOIN inserted i ON d.SupplierId = i.SupplierId
+    WHERE i.SupplierId IS NULL;
+
+    -- UPDATE
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'Supplier', 'UPDATE', i.SupplierId, 'SupplierNo',
+           CAST(d.SupplierNo AS NVARCHAR), CAST(i.SupplierNo AS NVARCHAR), @User
+    FROM inserted i JOIN deleted d ON i.SupplierId = d.SupplierId
+    WHERE ISNULL(i.SupplierNo, -1) <> ISNULL(d.SupplierNo, -1)
+
+    UNION ALL
+    SELECT 'Supplier', 'UPDATE', i.SupplierId, 'Name',
+           d.Name, i.Name, @User
+    FROM inserted i JOIN deleted d ON i.SupplierId = d.SupplierId
+    WHERE ISNULL(i.Name, '') <> ISNULL(d.Name, '');
+END
+GO
+
+
+-- Audit trigger for Certification
+CREATE OR ALTER TRIGGER trg_Audit_Certification
+ON Certification
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    DECLARE @User NVARCHAR(100) = SYSTEM_USER;
+
+    -- INSERT
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'Certification', 'INSERT', i.CertificationId, 'FULL_ROW', NULL,
+           CONCAT('CertificationType=', i.CertificationType, '; Description=', i.Description), @User
+    FROM inserted i
+    LEFT JOIN deleted d ON i.CertificationId = d.CertificationId
+    WHERE d.CertificationId IS NULL;
+
+    -- DELETE
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'Certification', 'DELETE', d.CertificationId, 'FULL_ROW',
+           CONCAT('CertificationType=', d.CertificationType, '; Description=', d.Description), NULL, @User
+    FROM deleted d
+    LEFT JOIN inserted i ON d.CertificationId = i.CertificationId
+    WHERE i.CertificationId IS NULL;
+
+    -- UPDATE
+    INSERT INTO AuditLog (TableName, Action, RecordId, FieldName, OldValue, NewValue, PerformedBy)
+    SELECT 'Certification', 'UPDATE', i.CertificationId, 'CertificationType',
+           d.CertificationType, i.CertificationType, @User
+    FROM inserted i JOIN deleted d ON i.CertificationId = d.CertificationId
+    WHERE ISNULL(i.CertificationType, '') <> ISNULL(d.CertificationType, '')
+
+    UNION ALL
+    SELECT 'Certification', 'UPDATE', i.CertificationId, 'Description',
+           d.Description, i.Description, @User
+    FROM inserted i JOIN deleted d ON i.CertificationId = d.CertificationId
+    WHERE ISNULL(i.Description, '') <> ISNULL(d.Description, '');
+END
+GO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1228,6 +1352,7 @@ GO
 INSERT INTO FieldDependency (ParentField, ChildField, TriggerValue, Step) VALUES
 ('IsFoodApproved', 'FKM_MaterialType', 'true', 2);
 GO
+
 
 
 
