@@ -9,6 +9,7 @@ namespace ProduktOprettelse.Views
     /// View for obligatoriske felter i trin 4 af produktoprettelsesprocessen.
     /// Dette trin indeholder felter der er påkrævet for at produktet kan oprettes,
     /// samt yderligere produktoplysninger.
+    /// Updated to support database-driven dropdowns.
     /// </summary>
     public partial class Trin4ObligatoriskeFelterView : UserControl
     {
@@ -234,10 +235,30 @@ namespace ProduktOprettelse.Views
         public bool FSCMIX70 => chkFSCMIX70?.IsChecked ?? false;
 
         /// <summary>
-        /// Giv produktet et hangtag eller sticker
+        /// Får valgt hangtag/sticker fra database-baseret dropdown.
         /// </summary>
-        public string HangtagsStickers => cmbHangtagsStickers?.SelectedItem?.ToString() ?? string.Empty;
+        public string HangtagsStickers
+        {
+            get
+            {
+                if (cmbHangtagsStickers?.SelectedItem is ListeItem selectedItem)
+                    return selectedItem.Navn;
+                return string.Empty;
+            }
+        }
 
+        /// <summary>
+        /// Får valgt hangtag/sticker ID fra database.
+        /// </summary>
+        public int? HangtagsStickersId
+        {
+            get
+            {
+                if (cmbHangtagsStickers?.SelectedItem is ListeItem selectedItem)
+                    return selectedItem.Id;
+                return null;
+            }
+        }
 
         /// <summary>
         /// Får gruppe.
@@ -245,10 +266,56 @@ namespace ProduktOprettelse.Views
         public string Group => txtGroup?.Text ?? string.Empty;
 
         /// <summary>
-        /// Produktserie
+        /// Får valgt produktserie fra database-baseret dropdown.
         /// </summary>
+        public string Produktserie
+        {
+            get
+            {
+                if (cmbProduktserie?.SelectedItem is ListeItem selectedItem)
+                    return selectedItem.Navn;
+                return string.Empty;
+            }
+        }
 
-        public string Produktserie => cmbProduktserie?.SelectedItem?.ToString() ?? string.Empty;
+        /// <summary>
+        /// Får valgt produktserie ID fra database.
+        /// </summary>
+        public int? ProduktserieId
+        {
+            get
+            {
+                if (cmbProduktserie?.SelectedItem is ListeItem selectedItem)
+                    return selectedItem.Id;
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Får valgt produkt logo fra database-baseret dropdown.
+        /// </summary>
+        public string ProduktLogo
+        {
+            get
+            {
+                if (cmbProduktLogo?.SelectedItem is ListeItem selectedItem)
+                    return selectedItem.Navn;
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
+        /// Får valgt produkt logo ID fra database.
+        /// </summary>
+        public int? ProduktLogoId
+        {
+            get
+            {
+                if (cmbProduktLogo?.SelectedItem is ListeItem selectedItem)
+                    return selectedItem.Id;
+                return null;
+            }
+        }
 
         #endregion
 
@@ -269,7 +336,7 @@ namespace ProduktOprettelse.Views
 
             // Og at slutdato er efter startdato hvis den er angivet
             bool datoerValide = !Slutdato.HasValue || (Startdato.HasValue && Slutdato.Value >= Startdato.Value);
-            
+
 
             // Tilføj validering af vægtfelter og målefelter
             bool grossWeightValid = string.IsNullOrWhiteSpace(GrossWeight) || decimal.TryParse(GrossWeight.Replace(',', '.'), out _);
@@ -285,8 +352,7 @@ namespace ProduktOprettelse.Views
             bool customerClearancePctValid = string.IsNullOrWhiteSpace(CustomerClearancePct) || decimal.TryParse(CustomerClearancePct.Replace(',', '.'), out _);
             bool innerCartonValid = string.IsNullOrWhiteSpace(InnerCarton) || int.TryParse(InnerCarton, out _);
 
-            // Valider at der er valgt en produktserie, handtags eller stickers og at der er indtastet en gruppe
-
+            // Valider påkrævede dropdown felter - nu database-baseret
             bool produktserieValid = cmbProduktserie?.SelectedItem != null;
             bool hangtagsStickersValid = cmbHangtagsStickers?.SelectedItem != null;
             bool groupValid = !string.IsNullOrWhiteSpace(Group);
@@ -358,10 +424,13 @@ namespace ProduktOprettelse.Views
             txtOther.Text = string.Empty;
             chkFSC100.IsChecked = false;
             chkFSCMIX70.IsChecked = false;
+
+            // Reset database-driven dropdowns
             cmbHangtagsStickers.SelectedIndex = -1;
-            txtGroup.Text = string.Empty;
             cmbProduktserie.SelectedIndex = -1;
             cmbProduktLogo.SelectedIndex = -1;
+
+            txtGroup.Text = string.Empty;
         }
     }
 }

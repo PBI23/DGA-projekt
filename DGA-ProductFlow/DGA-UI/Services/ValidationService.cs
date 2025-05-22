@@ -9,6 +9,7 @@ namespace ProduktOprettelse.Services
 {
     /// <summary>
     /// Service til at håndtere validering af felter på tværs af applikationen
+    /// Updated for .NET 8.0 compatibility
     /// </summary>
     public class ValidationService
     {
@@ -17,10 +18,10 @@ namespace ProduktOprettelse.Services
         /// </summary>
         public class ValidationRule
         {
-            public string FieldName { get; set; }
-            public Func<bool> Condition { get; set; }
-            public string ErrorMessage { get; set; }
-            public Control Control { get; set; }  // Reference til UI-kontrollen
+            public string FieldName { get; set; } = string.Empty;
+            public Func<bool> Condition { get; set; } = () => true;
+            public string ErrorMessage { get; set; } = string.Empty;
+            public Control? Control { get; set; }  // Reference til UI-kontrollen
         }
 
         /// <summary>
@@ -34,7 +35,10 @@ namespace ProduktOprettelse.Services
             // Nulstil alle kontroller først (fjern eventuelle fejlmarkeringer)
             foreach (var rule in rules.Where(r => r.Control != null))
             {
-                rule.Control.BorderBrush = Brushes.Gray; // Brug en passende standardfarve
+                if (rule.Control != null)
+                {
+                    rule.Control.BorderBrush = SystemColors.ControlDarkBrush; // Use system brush for consistency
+                }
             }
 
             foreach (var rule in rules)
@@ -70,6 +74,35 @@ namespace ProduktOprettelse.Services
             return rules.Where(r => !r.Condition())
                         .Select(r => r.ErrorMessage)
                         .ToList();
+        }
+
+        /// <summary>
+        /// Validates that a text field contains only numeric values
+        /// </summary>
+        /// <param name="value">The text value to validate</param>
+        /// <returns>True if numeric, false otherwise</returns>
+        public static bool IsNumeric(string value)
+        {
+            return !string.IsNullOrWhiteSpace(value) &&
+                   value.All(char.IsDigit);
+        }
+
+        /// <summary>
+        /// Validates that a text field contains a valid decimal value
+        /// </summary>
+        /// <param name="value">The text value to validate</param>
+        /// <returns>True if valid decimal, false otherwise</returns>
+        public static bool IsValidDecimal(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return false;
+
+            // Handle both comma and period as decimal separator
+            var normalizedValue = value.Replace(',', '.');
+            return decimal.TryParse(normalizedValue,
+                System.Globalization.NumberStyles.Any,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out _);
         }
     }
 }

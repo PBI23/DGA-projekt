@@ -3,6 +3,7 @@ using System.Data;
 using Microsoft.Data.SqlClient;
 using ProduktFlow2.Core.Models;
 using ProduktFlow2.Core.Helpers;
+using System.Collections.Generic;
 
 namespace ProduktFlow2.Core.Repositories
 {
@@ -90,7 +91,6 @@ namespace ProduktFlow2.Core.Repositories
             cmd.ExecuteNonQuery();
         }
 
-
         public void SaveStep4(Step4Dto dto)
         {
             using var conn = SqlHelper.CreateConnection(_connectionString);
@@ -154,7 +154,6 @@ namespace ProduktFlow2.Core.Repositories
             return fields;
         }
 
-
         public List<FieldDefinition> GetTriggeredFields(string parentField, string triggerValue, int step)
         {
             var triggeredFields = new List<FieldDefinition>();
@@ -186,7 +185,6 @@ namespace ProduktFlow2.Core.Repositories
             return triggeredFields;
         }
 
-
         public List<Product> GetAllDrafts()
         {
             var drafts = new List<Product>();
@@ -215,10 +213,8 @@ namespace ProduktFlow2.Core.Repositories
                 drafts.Add(product);
             }
 
-
             return drafts;
         }
-
 
         public Product GetProductById(int id)
         {
@@ -258,9 +254,189 @@ namespace ProduktFlow2.Core.Repositories
             cmd.ExecuteNonQuery();
         }
 
+        // NEW DROPDOWN METHODS - Reading from your database tables
 
+        public List<DropdownItem> GetCountries()
+        {
+            var countries = new List<DropdownItem>();
 
+            using var conn = SqlHelper.CreateConnection(_connectionString);
+            using var cmd = new SqlCommand("SELECT CountryId, CountryName, CountryCode FROM Country ORDER BY CountryName", conn);
 
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                countries.Add(new DropdownItem
+                {
+                    Id = reader.GetInt32("CountryId"),
+                    Name = reader.GetString("CountryName"),
+                    Code = reader.GetString("CountryCode")
+                });
+            }
+
+            return countries;
+        }
+
+        public List<DropdownItem> GetDesigners()
+        {
+            var designers = new List<DropdownItem>();
+
+            using var conn = SqlHelper.CreateConnection(_connectionString);
+            using var cmd = new SqlCommand("SELECT DesignerId, DesignerName FROM Designer ORDER BY DesignerName", conn);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                designers.Add(new DropdownItem
+                {
+                    Id = reader.GetInt32("DesignerId"),
+                    Name = reader.GetString("DesignerName")
+                });
+            }
+
+            return designers;
+        }
+
+        public List<DropdownItem> GetSuppliers()
+        {
+            var suppliers = new List<DropdownItem>();
+
+            using var conn = SqlHelper.CreateConnection(_connectionString);
+            using var cmd = new SqlCommand("SELECT SupplierId, Name, SupplierNo FROM Supplier ORDER BY Name", conn);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                suppliers.Add(new DropdownItem
+                {
+                    Id = reader.GetInt32("SupplierId"),
+                    Name = reader.GetString("Name"),
+                    Code = reader.IsDBNull("SupplierNo") ? "" : reader.GetInt32("SupplierNo").ToString()
+                });
+            }
+
+            return suppliers;
+        }
+
+        public List<DropdownItem> GetColorGroups()
+        {
+            var colorGroups = new List<DropdownItem>();
+
+            using var conn = SqlHelper.CreateConnection(_connectionString);
+            using var cmd = new SqlCommand("SELECT ColorGroupId, ColorGroupName FROM ColorGroup ORDER BY ColorGroupName", conn);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                colorGroups.Add(new DropdownItem
+                {
+                    Id = reader.GetInt32("ColorGroupId"),
+                    Name = reader.IsDBNull("ColorGroupName") ? "" : reader.GetString("ColorGroupName")
+                });
+            }
+
+            return colorGroups;
+        }
+
+        public List<DropdownItem> GetCertifications()
+        {
+            var certifications = new List<DropdownItem>();
+
+            using var conn = SqlHelper.CreateConnection(_connectionString);
+            using var cmd = new SqlCommand("SELECT CertificationId, CertificationType FROM Certification ORDER BY CertificationType", conn);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                certifications.Add(new DropdownItem
+                {
+                    Id = reader.GetInt32("CertificationId"),
+                    Name = reader.GetString("CertificationType")
+                });
+            }
+
+            return certifications;
+        }
+
+        public List<DropdownItem> GetPantoneColors()
+        {
+            var pantoneColors = new List<DropdownItem>();
+
+            using var conn = SqlHelper.CreateConnection(_connectionString);
+            using var cmd = new SqlCommand("SELECT PantoneId, ColorCode, ColorName FROM Pantone ORDER BY ColorCode", conn);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                pantoneColors.Add(new DropdownItem
+                {
+                    Id = reader.GetInt32("PantoneId"),
+                    Name = reader.IsDBNull("ColorName") ? "" : reader.GetString("ColorName"),
+                    Code = reader.GetString("ColorCode")
+                });
+            }
+
+            return pantoneColors;
+        }
+
+        public List<DropdownItem> GetProductLogos()
+        {
+            var productLogos = new List<DropdownItem>();
+
+            using var conn = SqlHelper.CreateConnection(_connectionString);
+            using var cmd = SqlHelper.CreateStoredProcedureCommand("spGetProductLogos", conn);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                productLogos.Add(new DropdownItem
+                {
+                    Id = reader.GetInt32("Id"),
+                    Name = reader.GetString("Name")
+                });
+            }
+
+            return productLogos;
+        }
+
+        public List<DropdownItem> GetHangtagsStickers()
+        {
+            var hangtagsStickers = new List<DropdownItem>();
+
+            using var conn = SqlHelper.CreateConnection(_connectionString);
+            using var cmd = SqlHelper.CreateStoredProcedureCommand("spGetHangtagsStickers", conn);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                hangtagsStickers.Add(new DropdownItem
+                {
+                    Id = reader.GetInt32("Id"),
+                    Name = reader.GetString("Name")
+                });
+            }
+
+            return hangtagsStickers;
+        }
+
+        public List<DropdownItem> GetProductSeries()
+        {
+            var productSeries = new List<DropdownItem>();
+
+            using var conn = SqlHelper.CreateConnection(_connectionString);
+            using var cmd = SqlHelper.CreateStoredProcedureCommand("spGetProductSeries", conn);
+
+            using var reader = cmd.ExecuteReader();
+            while (reader.Read())
+            {
+                productSeries.Add(new DropdownItem
+                {
+                    Id = reader.GetInt32("Id"),
+                    Name = reader.GetString("Name")
+                });
+            }
+
+            return productSeries;
+        }
     }
 }
-
