@@ -108,12 +108,4 @@ CodeCoverage/
 TestResult.xml
 nunit-*.xml
 
-# WPF specific - ignore generated resource files
-**/*.g.cs
-**/*.g.i.cs
-**/*.baml
 
-# Backup files
-*.bak
-*.backup
-**/DocumentLayout.backup.json
