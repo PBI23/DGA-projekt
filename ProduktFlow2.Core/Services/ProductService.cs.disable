@@ -1,0 +1,62 @@
+using ProductFlowStandalone.Data;
+using ProductFlowStandalone.Models;
+
+namespace ProductFlowStandalone.Services
+{
+    public class ProductService
+    {
+        private readonly AppDbContext _db;
+
+        public ProductService(AppDbContext db)
+        {
+            _db = db;
+        }
+
+        public int HandleStep1(ProductDto dto)
+        {
+            var product = new Product
+            {
+                Name = dto.Name,
+                ProductGroup = dto.ProductGroup,
+                CountryOfOrigin = dto.CountryOfOrigin,
+                Supplier = dto.Supplier,
+                Designer = dto.Designer,
+                Status = "Draft"
+            };
+
+            _db.Products.Add(product);
+            _db.SaveChanges();
+
+            var fields = _db.FieldDefinitions.Where(f => f.Step == 2).ToList();
+            foreach (var f in fields)
+            {
+                _db.ProductCertifications.Add(new ProductCertification {
+                    ProductId = product.ProductId,
+                    Type = f.FieldName,
+                    Status = false
+                });
+            }
+            _db.SaveChanges();
+            return product.ProductId;
+        }
+
+        public List<FieldDefinition> GetFieldsForStep(int step)
+        {
+            return _db.FieldDefinitions.Where(f => f.Step == step).ToList();
+        }
+
+        public void SaveCertifications(int productId, Dictionary<string, bool> answers)
+        {
+            foreach (var entry in answers)
+            {
+                var cert = _db.ProductCertifications.FirstOrDefault(c =>
+                    c.ProductId == productId && c.Type == entry.Key);
+                if (cert != null)
+                {
+                    cert.Status = entry.Value;
+                }
+            }
+            _db.SaveChanges();
+        }
+    }
+}
