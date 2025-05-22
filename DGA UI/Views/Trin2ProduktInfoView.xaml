@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="ProduktOprettelse.Views.Trin2ProduktInfoView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ProduktOprettelse.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Kategori" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Farve" FontWeight="SemiBold" Grid.Row="1" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Materiale" FontWeight="SemiBold" Grid.Row="2" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Højde (cm)" FontWeight="SemiBold" Grid.Row="3" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Bredde (cm)" FontWeight="SemiBold" Grid.Row="4" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Dybde (cm)" FontWeight="SemiBold" Grid.Row="5" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Vægt (g)" FontWeight="SemiBold" Grid.Row="6" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Diameter (cm)" FontWeight="SemiBold" Grid.Row="7" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Enhed / Unit" FontWeight="SemiBold" Grid.Row="8" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+
+        <ComboBox x:Name="cmbKategori" Grid.Row="0" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14" ItemsSource="{Binding Kategorier}" DisplayMemberPath="Navn"/>
+        <ComboBox x:Name="cmbFarve" Grid.Row="1" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14" ItemsSource="{Binding Farver}" DisplayMemberPath="Navn"/>
+        <ComboBox x:Name="cmbMateriale" Grid.Row="2" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14" ItemsSource="{Binding Materialer}" DisplayMemberPath="Navn"/>
+        <TextBox x:Name="txtHoejde" Grid.Row="3" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+        <TextBox x:Name="txtBredde" Grid.Row="4" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+        <TextBox x:Name="txtDybde" Grid.Row="5" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+        <TextBox x:Name="txtVaegt" Grid.Row="6" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+        <TextBox x:Name="txtDiameter" Grid.Row="7" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+        <ComboBox x:Name="cmbEnhed" Grid.Row="8" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14" ItemsSource="{Binding Enheder}" DisplayMemberPath="Navn"/>
+    </Grid>
+</UserControl>

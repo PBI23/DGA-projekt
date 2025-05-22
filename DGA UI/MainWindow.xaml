@@ -1,0 +1,75 @@
+﻿<Window x:Class="ProduktOprettelse.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ProduktOprettelse"
+        xmlns:views="clr-namespace:ProduktOprettelse.Views"
+        mc:Ignorable="d"
+        Title="Produkt Oprettelse" Height="Auto" Width="Auto">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header med trin-knapper -->
+        <StackPanel Grid.Row="0" Background="#F5F5F5" Margin="0,0,0,10">
+            <TextBlock Text="Produkt Oprettelse" FontSize="24" FontWeight="Bold" Margin="20,15,0,15" Foreground="#333333"/>
+
+            <StackPanel Orientation="Horizontal" Margin="20,0,20,15">
+                <Button x:Name="btnTrin1" Content="1. Basisoplysninger" Padding="10,5" Margin="0,0,5,0" Click="btnTrin_Click" Tag="Trin1" 
+                        Width="180" Background="#4CAF50" Foreground="White" BorderThickness="0" />
+
+                <Button x:Name="btnTrin2" Content="2. Produktinfo" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin2" 
+                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+
+                <Button x:Name="btnTrin3" Content="3. Compliance" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin3" 
+                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+
+                <Button x:Name="btnTrin4" Content="4. Obligatoriske felter" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin4" 
+                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+
+                <Button x:Name="btnTrin5" Content="5. Valgfri felter" Padding="10,5" Margin="5,0,0,0" Click="btnTrin_Click" Tag="Trin5" 
+                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Indhold container -->
+        <Border Grid.Row="1" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" Margin="20,0,20,10" Padding="20">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <Grid>
+                    <!-- Trin 1: Basisoplysninger -->
+                    <views:Trin1BasisoplysningerView x:Name="ucTrin1Basisoplysninger" Visibility="Visible" />
+
+                    <!-- Trin 2: Produktinfo -->
+                    <views:Trin2ProduktInfoView x:Name="ucTrin2ProduktInfo" Visibility="Collapsed" />
+
+                    <!-- Trin 3: Compliance -->
+                    <views:Trin3ComplianceView x:Name="ucTrin3Compliance" Visibility="Collapsed" />
+
+                    <!-- Trin 4: Obligatoriske felter -->
+                    <views:Trin4ObligatoriskeFelterView x:Name="ucTrin4ObligatoriskeFelter" Visibility="Collapsed" />
+
+                    <!-- Trin 5: Valgfri felter -->
+                    <views:Trin5ValgfriFelterView x:Name="ucTrin5ValgfriFelter" Visibility="Collapsed" />
+                </Grid>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Footer med navigations-knapper -->
+        <Grid Grid.Row="3" Background="#F0F0F0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Button x:Name="btnTilbage" Content="Tilbage" Width="120" Height="40" Grid.Column="0" Margin="20,10" HorizontalAlignment="Left" Click="btnTilbage_Click" FontSize="14"/>
+            <Button x:Name="btnGemKladde" Content="Gem som kladde" Width="120" Height="40" Grid.Column="1" Margin="20,10" Click="btnGemKladde_Click" FontSize="14" IsEnabled="False" Visibility="Hidden"/>
+            <Button x:Name="btnNaeste" Content="Næste" Width="120" Height="40" Grid.Column="3" Margin="20,10" HorizontalAlignment="Right" Background="#4CAF50" Foreground="White" Click="btnNaeste_Click" FontSize="14"/>
+        </Grid>
+    </Grid>
+</Window>

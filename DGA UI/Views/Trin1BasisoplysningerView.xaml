@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="ProduktOprettelse.Views.Trin1BasisoplysningerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ProduktOprettelse.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Produktnavn" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Varegruppe" FontWeight="SemiBold" Grid.Row="1" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Sæson" FontWeight="SemiBold" Grid.Row="2" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="DGA varenummer" FontWeight="SemiBold" Grid.Row="3" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Oprindelsesland" FontWeight="SemiBold" Grid.Row="4" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Leverandør" FontWeight="SemiBold" Grid.Row="5" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Designer" FontWeight="SemiBold" Grid.Row="6" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Beskrivelse" FontWeight="SemiBold" Grid.Row="7" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+        <TextBlock Text="Coli-størrelse-antal" FontWeight="SemiBold" Grid.Row="8" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+
+        <TextBox x:Name="txtProduktNavn" Grid.Row="0" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+        <ComboBox x:Name="cmbVaregruppe" Grid.Row="1" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14" ItemsSource="{Binding Varegrupper}" DisplayMemberPath="Navn"/>
+        <ComboBox x:Name="cmbSaeson" Grid.Row="2" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14" ItemsSource="{Binding Saesoner}" DisplayMemberPath="Navn"/>
+        <TextBox x:Name="txtVareNummer" Grid.Row="3" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+        <ComboBox x:Name="cmbOprindelsesland" Grid.Row="4" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14" ItemsSource="{Binding Oprindelseslande}" DisplayMemberPath="Navn"/>
+        <ComboBox x:Name="cmbLeverandoer" Grid.Row="5" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14" ItemsSource="{Binding Leverandoerer}" DisplayMemberPath="Navn"/>
+        <ComboBox x:Name="cmbDesigner" Grid.Row="6" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14" ItemsSource="{Binding Designere}" DisplayMemberPath="Navn"/>
+        <ComboBox x:Name="cmbBeskrivelse" Grid.Row="7" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14" ItemsSource="{Binding Beskrivelse}" DisplayMemberPath="Navn"/>
+        <TextBox x:Name="txtColiStoerrelseAntal" Grid.Row="8" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericOnly" FontSize="14"/>
+    </Grid>
+</UserControl>

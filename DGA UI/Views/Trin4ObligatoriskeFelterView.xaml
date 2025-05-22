@@ -1,0 +1,140 @@
+﻿<UserControl x:Class="ProduktOprettelse.Views.Trin4ObligatoriskeFelterView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ProduktOprettelse.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="1800" d:DesignWidth="800">
+    
+        <Grid Margin="10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Kostpris (DKK)" FontWeight="SemiBold" Grid.Row="0" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Salgspris (DKK)" FontWeight="SemiBold" Grid.Row="1" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Momspligtig" FontWeight="SemiBold" Grid.Row="2" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Startdato" FontWeight="SemiBold" Grid.Row="3" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Slutdato" FontWeight="SemiBold" Grid.Row="4" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="På lager" FontWeight="SemiBold" Grid.Row="5" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+
+            <TextBox x:Name="txtKostpris" Grid.Row="0" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+            <TextBox x:Name="txtSalgspris" Grid.Row="1" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+            <CheckBox x:Name="chkMomspligtig" Grid.Row="2" Grid.Column="1" Margin="0,15,0,5" IsChecked="True" VerticalAlignment="Center" FontSize="14"/>
+            <DatePicker x:Name="dpStartdato" Grid.Row="3" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <DatePicker x:Name="dpSlutdato" Grid.Row="4" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <CheckBox x:Name="chkPaaLager" Grid.Row="5" Grid.Column="1" Margin="0,15,0,5" IsChecked="True" VerticalAlignment="Center" FontSize="14"/>
+
+            <TextBlock Text="Leverandør produktnr." FontWeight="SemiBold" Grid.Row="7" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Customer clearance no." FontWeight="SemiBold" Grid.Row="8" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Customer clearance %" FontWeight="SemiBold" Grid.Row="9" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Inner carton" FontWeight="SemiBold" Grid.Row="10" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Outer carton" FontWeight="SemiBold" Grid.Row="11" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="EAN Codes" FontWeight="SemiBold" Grid.Row="12" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Maingroup" FontWeight="SemiBold" Grid.Row="13" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Maincategory" FontWeight="SemiBold" Grid.Row="14" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Material" FontWeight="SemiBold" Grid.Row="15" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Gross weight" FontWeight="SemiBold" Grid.Row="16" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Packing height (cm)" FontWeight="SemiBold" Grid.Row="17" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Packing width/length (cm)" FontWeight="SemiBold" Grid.Row="18" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Packing depth (cm)" FontWeight="SemiBold" Grid.Row="19" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="KI height (cm)" FontWeight="SemiBold" Grid.Row="20" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="KY height (cm)" FontWeight="SemiBold" Grid.Row="21" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="KY width/length (cm)" FontWeight="SemiBold" Grid.Row="22" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Dishwasher" FontWeight="SemiBold" Grid.Row="23" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Microwave" FontWeight="SemiBold" Grid.Row="24" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="BSCI" FontWeight="SemiBold" Grid.Row="25" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Recycled" FontWeight="SemiBold" Grid.Row="26" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="LED El-retur" FontWeight="SemiBold" Grid.Row="27" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Svanemærket" FontWeight="SemiBold" Grid.Row="28" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Grüner Punkt" FontWeight="SemiBold" Grid.Row="29" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="CE" FontWeight="SemiBold" Grid.Row="30" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="ENERGIMÆRKNING" FontWeight="SemiBold" Grid.Row="31" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Other" FontWeight="SemiBold" Grid.Row="32" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="FSC100" FontWeight="SemiBold" Grid.Row="33" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="FSCMIX70" FontWeight="SemiBold" Grid.Row="34" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Hangtags/Stickers" FontWeight="SemiBold" Grid.Row="35" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Group" FontWeight="SemiBold" Grid.Row="36" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Produktserie" FontWeight="SemiBold" Grid.Row="37" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+            <TextBlock Text="Produkt Logo" FontWeight="SemiBold" Grid.Row="38" Grid.Column="0" Margin="0,10,20,10" VerticalAlignment="Center" FontSize="14"/>
+
+
+        <TextBox x:Name="txtLeverandorProduktNr" Grid.Row="7" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtCustomerClearanceNo" Grid.Row="8" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericOnly" FontSize="14"/>
+            <TextBox x:Name="txtCustomerClearancePct" Grid.Row="9" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+            <TextBox x:Name="txtInnerCarton" Grid.Row="10" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericOnly" FontSize="14"/>
+            <TextBox x:Name="txtOuterCarton" Grid.Row="11" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtEANCodes" Grid.Row="12" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtMaingroup" Grid.Row="13" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtMaincategory" Grid.Row="14" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtMaterial" Grid.Row="15" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtGrossWeight" Grid.Row="16" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+            <TextBox x:Name="txtPackingHeight" Grid.Row="17" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+            <TextBox x:Name="txtPackingWidth" Grid.Row="18" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+            <TextBox x:Name="txtPackingDepth" Grid.Row="19" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+            <TextBox x:Name="txtKIHeight" Grid.Row="20" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+            <TextBox x:Name="txtKYHeight" Grid.Row="21" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+            <TextBox x:Name="txtKYWidth" Grid.Row="22" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" PreviewTextInput="NumericWithDecimal" FontSize="14"/>
+            <CheckBox x:Name="chkDishwasher" Grid.Row="23" Grid.Column="1" Margin="0,15,0,5" VerticalAlignment="Center" FontSize="14"/>
+            <CheckBox x:Name="chkMicrowave" Grid.Row="24" Grid.Column="1" Margin="0,15,0,5" VerticalAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtBSCI" Grid.Row="25" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtRecycled" Grid.Row="26" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtLEDElRetur" Grid.Row="27" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <CheckBox x:Name="chkSvanemaerket" Grid.Row="28" Grid.Column="1" Margin="0,15,0,5" VerticalAlignment="Center" FontSize="14"/>
+            <CheckBox x:Name="chkGrunerPunkt" Grid.Row="29" Grid.Column="1" Margin="0,15,0,5" VerticalAlignment="Center" FontSize="14"/>
+            <CheckBox x:Name="chkCE" Grid.Row="30" Grid.Column="1" Margin="0,15,0,5" VerticalAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtENERGIMAERKNING" Grid.Row="31" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtOther" Grid.Row="32" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <CheckBox x:Name="chkFSC100" Grid.Row="33" Grid.Column="1" Margin="0,15,0,5" VerticalAlignment="Center" FontSize="14"/>
+            <CheckBox x:Name="chkFSCMIX70" Grid.Row="34" Grid.Column="1" Margin="0,15,0,5" VerticalAlignment="Center" FontSize="14"/>
+            <ComboBox x:Name="cmbHangtagsStickers" Grid.Row="35" Grid.Column="1" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <TextBox x:Name="txtGroup" Grid.Row="36" Grid.Column="1" Height="30" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+            <ComboBox x:Name="cmbProduktserie" Grid.Row="37" Grid.Column="1" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+        <ComboBox x:Name="cmbProduktLogo" Grid.Row="38" Grid.Column="1" Margin="0,5,0,5" VerticalContentAlignment="Center" FontSize="14"/>
+    </Grid>
+    
+</UserControl>
