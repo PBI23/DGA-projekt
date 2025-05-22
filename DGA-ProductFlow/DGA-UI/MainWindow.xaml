@@ -6,70 +6,109 @@
         xmlns:local="clr-namespace:ProduktOprettelse"
         xmlns:views="clr-namespace:ProduktOprettelse.Views"
         mc:Ignorable="d"
-        Title="Produkt Oprettelse" Height="Auto" Width="Auto">
+        Title="DGA Product Management System" Height="700" Width="1200"
+        WindowStartupLocation="CenterScreen">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        <!-- Home Screen (default view) -->
+        <views:HomeScreenView x:Name="ucHomeScreen" Visibility="Visible"/>
 
-        <!-- Header med trin-knapper -->
-        <StackPanel Grid.Row="0" Background="#F5F5F5" Margin="0,0,0,10">
-            <TextBlock Text="Produkt Oprettelse" FontSize="24" FontWeight="Bold" Margin="20,15,0,15" Foreground="#333333"/>
+        <!-- Product Creation/Edit View (hidden by default) -->
+        <Grid x:Name="gridProductCreation" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <StackPanel Orientation="Horizontal" Margin="20,0,20,15">
-                <Button x:Name="btnTrin1" Content="1. Basisoplysninger" Padding="10,5" Margin="0,0,5,0" Click="btnTrin_Click" Tag="Trin1" 
-                        Width="180" Background="#4CAF50" Foreground="White" BorderThickness="0" />
-
-                <Button x:Name="btnTrin2" Content="2. Produktinfo" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin2" 
-                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
-
-                <Button x:Name="btnTrin3" Content="3. Compliance" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin3" 
-                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
-
-                <Button x:Name="btnTrin4" Content="4. Obligatoriske felter" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin4" 
-                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
-
-                <Button x:Name="btnTrin5" Content="5. Valgfri felter" Padding="10,5" Margin="5,0,0,0" Click="btnTrin_Click" Tag="Trin5" 
-                        Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
-            </StackPanel>
-        </StackPanel>
-
-        <!-- Indhold container -->
-        <Border Grid.Row="1" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" Margin="20,0,20,10" Padding="20">
-            <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <!-- Header med trin-knapper -->
+            <StackPanel Grid.Row="0" Background="#F5F5F5" Margin="0,0,0,10">
                 <Grid>
-                    <!-- Trin 1: Basisoplysninger -->
-                    <views:Trin1BasisoplysningerView x:Name="ucTrin1Basisoplysninger" Visibility="Visible" />
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                    <!-- Trin 2: Produktinfo -->
-                    <views:Trin2ProduktInfoView x:Name="ucTrin2ProduktInfo" Visibility="Collapsed" />
+                    <!-- Back to home button -->
+                    <Button Grid.Column="0" x:Name="btnBackToHome" 
+                            Content="← Tilbage til oversigt" 
+                            Click="btnBackToHome_Click"
+                            Background="Transparent" 
+                            BorderThickness="0"
+                            Foreground="#666"
+                            FontSize="14"
+                            Margin="20,15,0,0"
+                            Cursor="Hand"/>
 
-                    <!-- Trin 3: Compliance -->
-                    <views:Trin3ComplianceView x:Name="ucTrin3Compliance" Visibility="Collapsed" />
+                    <TextBlock Grid.Column="1" Text="Produkt Oprettelse" 
+                               FontSize="24" FontWeight="Bold" 
+                               Margin="20,15,0,15" 
+                               Foreground="#333333"
+                               HorizontalAlignment="Center"/>
 
-                    <!-- Trin 4: Obligatoriske felter -->
-                    <views:Trin4ObligatoriskeFelterView x:Name="ucTrin4ObligatoriskeFelter" Visibility="Collapsed" />
-
-                    <!-- Trin 5: Valgfri felter -->
-                    <views:Trin5ValgfriFelterView x:Name="ucTrin5ValgfriFelter" Visibility="Collapsed" />
+                    <TextBlock Grid.Column="2" x:Name="txtEditMode" 
+                               Text="Redigering - Produkt ID: " 
+                               FontSize="14" 
+                               Margin="0,20,20,0"
+                               Foreground="#666"
+                               Visibility="Collapsed"/>
                 </Grid>
-            </ScrollViewer>
-        </Border>
 
-        <!-- Footer med navigations-knapper -->
-        <Grid Grid.Row="3" Background="#F0F0F0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal" Margin="20,0,20,15">
+                    <Button x:Name="btnTrin1" Content="1. Basisoplysninger" Padding="10,5" Margin="0,0,5,0" Click="btnTrin_Click" Tag="Trin1" 
+                            Width="180" Background="#4CAF50" Foreground="White" BorderThickness="0" />
 
-            <Button x:Name="btnTilbage" Content="Tilbage" Width="120" Height="40" Grid.Column="0" Margin="20,10" HorizontalAlignment="Left" Click="btnTilbage_Click" FontSize="14"/>
-            <Button x:Name="btnGemKladde" Content="Gem som kladde" Width="120" Height="40" Grid.Column="1" Margin="20,10" Click="btnGemKladde_Click" FontSize="14" IsEnabled="False" Visibility="Hidden"/>
-            <Button x:Name="btnNaeste" Content="Næste" Width="120" Height="40" Grid.Column="3" Margin="20,10" HorizontalAlignment="Right" Background="#4CAF50" Foreground="White" Click="btnNaeste_Click" FontSize="14"/>
+                    <Button x:Name="btnTrin2" Content="2. Produktinfo" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin2" 
+                            Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+
+                    <Button x:Name="btnTrin3" Content="3. Compliance" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin3" 
+                            Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+
+                    <Button x:Name="btnTrin4" Content="4. Obligatoriske felter" Padding="10,5" Margin="5,0,5,0" Click="btnTrin_Click" Tag="Trin4" 
+                            Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+
+                    <Button x:Name="btnTrin5" Content="5. Valgfri felter" Padding="10,5" Margin="5,0,0,0" Click="btnTrin_Click" Tag="Trin5" 
+                            Width="180" Background="#E0E0E0" Foreground="Black" BorderThickness="0" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- Indhold container -->
+            <Border Grid.Row="1" Background="White" BorderBrush="#E0E0E0" BorderThickness="1" Margin="20,0,20,10" Padding="20">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <!-- Trin 1: Basisoplysninger -->
+                        <views:Trin1BasisoplysningerView x:Name="ucTrin1Basisoplysninger" Visibility="Visible" />
+
+                        <!-- Trin 2: Produktinfo -->
+                        <views:Trin2ProduktInfoView x:Name="ucTrin2ProduktInfo" Visibility="Collapsed" />
+
+                        <!-- Trin 3: Compliance -->
+                        <views:Trin3ComplianceView x:Name="ucTrin3Compliance" Visibility="Collapsed" />
+
+                        <!-- Trin 4: Obligatoriske felter -->
+                        <views:Trin4ObligatoriskeFelterView x:Name="ucTrin4ObligatoriskeFelter" Visibility="Collapsed" />
+
+                        <!-- Trin 5: Valgfri felter -->
+                        <views:Trin5ValgfriFelterView x:Name="ucTrin5ValgfriFelter" Visibility="Collapsed" />
+                    </Grid>
+                </ScrollViewer>
+            </Border>
+
+            <!-- Footer med navigations-knapper -->
+            <Grid Grid.Row="3" Background="#F0F0F0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button x:Name="btnTilbage" Content="Tilbage" Width="120" Height="40" Grid.Column="0" Margin="20,10" HorizontalAlignment="Left" Click="btnTilbage_Click" FontSize="14"/>
+                <Button x:Name="btnGemKladde" Content="Gem som kladde" Width="120" Height="40" Grid.Column="1" Margin="20,10" Click="btnGemKladde_Click" FontSize="14" IsEnabled="True"/>
+                <Button x:Name="btnAnnuller" Content="Annuller" Width="120" Height="40" Grid.Column="3" Margin="20,10" Click="btnAnnuller_Click" FontSize="14" Background="#F44336" Foreground="White"/>
+                <Button x:Name="btnNaeste" Content="Næste" Width="120" Height="40" Grid.Column="4" Margin="20,10" HorizontalAlignment="Right" Background="#4CAF50" Foreground="White" Click="btnNaeste_Click" FontSize="14"/>
+            </Grid>
         </Grid>
     </Grid>
 </Window>

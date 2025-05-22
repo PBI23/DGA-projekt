@@ -1,0 +1,203 @@
+﻿<UserControl x:Class="ProduktOprettelse.Views.HomeScreenView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:ProduktOprettelse.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="1000">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#4CAF50" Padding="20">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="DGA Product Management" FontSize="28" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="Oversigt over alle produkter" FontSize="16" Foreground="White" Opacity="0.9" Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <Button Grid.Column="1" x:Name="btnCreateNewProduct" 
+                        Content="Opret nyt produkt" 
+                        Click="btnCreateNewProduct_Click"
+                        Background="White" Foreground="#4CAF50" 
+                        FontSize="16" FontWeight="Bold"
+                        Padding="20,10" 
+                        BorderThickness="0"
+                        Cursor="Hand">
+                    <Button.Resources>
+                        <Style TargetType="Border">
+                            <Setter Property="CornerRadius" Value="5"/>
+                        </Style>
+                    </Button.Resources>
+                </Button>
+            </Grid>
+        </Border>
+
+        <!-- Filter Section -->
+        <Border Grid.Row="1" Background="#F5F5F5" Padding="20,15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Søg:" VerticalAlignment="Center" Margin="0,0,10,0" FontWeight="SemiBold"/>
+                <TextBox Grid.Column="1" x:Name="txtSearch" VerticalAlignment="Center" Height="30" 
+                         TextChanged="txtSearch_TextChanged" 
+                         Tag="Søg efter produkt navn eller DGA nummer..."/>
+
+                <TextBlock Grid.Column="2" Text="Status:" VerticalAlignment="Center" Margin="20,0,10,0" FontWeight="SemiBold"/>
+                <ComboBox Grid.Column="3" x:Name="cmbStatusFilter" VerticalAlignment="Center" Height="30"
+                          SelectionChanged="cmbStatusFilter_SelectionChanged">
+                    <ComboBoxItem Content="Alle" IsSelected="True"/>
+                    <ComboBoxItem Content="Kladde"/>
+                    <ComboBoxItem Content="Godkendt"/>
+                    <ComboBoxItem Content="Under behandling"/>
+                </ComboBox>
+
+                <TextBlock Grid.Column="4" Text="Designer:" VerticalAlignment="Center" Margin="20,0,10,0" FontWeight="SemiBold"/>
+                <ComboBox Grid.Column="5" x:Name="cmbDesignerFilter" VerticalAlignment="Center" Height="30"
+                          SelectionChanged="cmbDesignerFilter_SelectionChanged"
+                          ItemsSource="{Binding Designere}" 
+                          DisplayMemberPath="Navn">
+                </ComboBox>
+
+                <Button Grid.Column="7" x:Name="btnRefresh" Content="Opdater" 
+                        Click="btnRefresh_Click" 
+                        Padding="15,5" Margin="10,0,0,0"
+                        Background="#2196F3" Foreground="White" BorderThickness="0"/>
+            </Grid>
+        </Border>
+
+        <!-- Product List -->
+        <DataGrid Grid.Row="2" x:Name="dgProducts" 
+                  AutoGenerateColumns="False" 
+                  CanUserAddRows="False"
+                  GridLinesVisibility="Horizontal"
+                  HeadersVisibility="Column"
+                  AlternatingRowBackground="#FAFAFA"
+                  SelectionMode="Single"
+                  MouseDoubleClick="dgProducts_MouseDoubleClick"
+                  Margin="20">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="Background" Value="#E0E0E0"/>
+                    <Setter Property="Foreground" Value="#333333"/>
+                    <Setter Property="FontWeight" Value="Bold"/>
+                    <Setter Property="Padding" Value="10,8"/>
+                    <Setter Property="BorderThickness" Value="0,0,1,1"/>
+                    <Setter Property="BorderBrush" Value="#CCCCCC"/>
+                </Style>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="Cursor" Value="Hand"/>
+                    <Style.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#E3F2FD"/>
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </DataGrid.Resources>
+
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Produkt ID" Binding="{Binding ProductId}" Width="80"/>
+                <DataGridTextColumn Header="DGA Nr." Binding="{Binding DgaItemNo}" Width="100"/>
+                <DataGridTextColumn Header="Produkt Navn" Binding="{Binding Name}" Width="200"/>
+                <DataGridTextColumn Header="Designer" Binding="{Binding Designer}" Width="120"/>
+                <DataGridTextColumn Header="Leverandør" Binding="{Binding Supplier}" Width="150"/>
+                <DataGridTextColumn Header="Land" Binding="{Binding CountryOfOrigin}" Width="100"/>
+                <DataGridTextColumn Header="Sæson" Binding="{Binding Season}" Width="100"/>
+                <DataGridTextColumn Header="Produktgruppe" Binding="{Binding ProductGroup}" Width="120"/>
+
+                <DataGridTemplateColumn Header="Status" Width="100">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Border CornerRadius="3" Padding="5,2" HorizontalAlignment="Center">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Status}" Value="Draft">
+                                                <Setter Property="Background" Value="#FFF3CD"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="Approved">
+                                                <Setter Property="Background" Value="#D4EDDA"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="Step2Completed">
+                                                <Setter Property="Background" Value="#CCE5FF"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="Step3Completed">
+                                                <Setter Property="Background" Value="#CCE5FF"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Status}" Value="Step4Completed">
+                                                <Setter Property="Background" Value="#CCE5FF"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <TextBlock Text="{Binding Status}" FontSize="12"/>
+                            </Border>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Handlinger" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                <Button Content="Rediger" 
+                                        Click="btnEdit_Click" 
+                                        Tag="{Binding ProductId}"
+                                        Padding="10,5" Margin="2"
+                                        Background="#2196F3" Foreground="White" BorderThickness="0"/>
+                                <Button Content="Vis" 
+                                        Click="btnView_Click" 
+                                        Tag="{Binding ProductId}"
+                                        Padding="10,5" Margin="2"
+                                        Background="#607D8B" Foreground="White" BorderThickness="0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Status Bar -->
+        <Border Grid.Row="3" Background="#F5F5F5" Padding="20,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" VerticalAlignment="Center">
+                    <TextBlock.Text>
+                        <MultiBinding StringFormat="Viser {0} produkter">
+                            <Binding ElementName="dgProducts" Path="Items.Count"/>
+                        </MultiBinding>
+                    </TextBlock.Text>
+                </TextBlock>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock Text="Sidst opdateret: " VerticalAlignment="Center"/>
+                    <TextBlock x:Name="txtLastUpdated" Text="Nu" VerticalAlignment="Center" FontWeight="Bold"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

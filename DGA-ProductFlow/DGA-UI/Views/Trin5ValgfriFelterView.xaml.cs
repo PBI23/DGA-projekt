@@ -66,10 +66,11 @@ namespace ProduktOprettelse.Views
             // men man kunne validere om de udfyldte felter overholder bestemte formater
 
             // For eksempel kunne vi validere at barcode kun indeholder tal og har en bestemt længde hvis udfyldt
-            bool barcodeValid = string.IsNullOrEmpty(Barcode) ||
-                               (Regex.IsMatch(Barcode, @"^[0-9]+$") && (Barcode.Length == 8 || Barcode.Length == 13));
+            //bool barcodeValid = string.IsNullOrEmpty(Barcode) ||
+            //(Regex.IsMatch(Barcode, @"^[0-9]+$") && (Barcode.Length == 8 || Barcode.Length == 13));
 
-            return barcodeValid;
+            //return barcodeValid;
+            return true;
         }
     }
 }

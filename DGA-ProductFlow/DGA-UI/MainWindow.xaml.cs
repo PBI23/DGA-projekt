@@ -11,7 +11,7 @@ namespace ProduktOprettelse
 {
     /// <summary>
     /// Hovedvindue for produkt-oprettelses applikationen.
-    /// Styrer navigation mellem trin og integrerer med ProductFlow2.Core for database-funktionalitet.
+    /// Nu med homescreen og navigation mellem produkt oversigt og oprettelse/redigering.
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -20,6 +20,8 @@ namespace ProduktOprettelse
         private Button[] stepButtons;
         private UserControl[] stepViews;
         private ProduktViewModel viewModel;
+        private bool isEditMode = false;
+        private int? editingProductId = null;
 
         /// <summary>
         /// Initialiserer en ny instans af MainWindow klassen med integreret ProductFlow2.Core.
@@ -39,7 +41,8 @@ namespace ProduktOprettelse
             stepButtons = new Button[] { btnTrin1, btnTrin2, btnTrin3, btnTrin4, btnTrin5 };
             stepViews = new UserControl[] { ucTrin1Basisoplysninger, ucTrin2ProduktInfo, ucTrin3Compliance, ucTrin4ObligatoriskeFelter, ucTrin5ValgfriFelter };
 
-            UpdateStepUI();
+            // Start på homescreen
+            ShowHomeScreen();
         }
 
         /// <summary>
@@ -55,6 +58,139 @@ namespace ProduktOprettelse
             {
                 MessageBox.Show($"Fejl ved indlæsning af data: {ex.Message}", "Fejl", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        /// <summary>
+        /// Viser homescreen og skjuler produkt oprettelse
+        /// </summary>
+        private void ShowHomeScreen()
+        {
+            ucHomeScreen.Visibility = Visibility.Visible;
+            gridProductCreation.Visibility = Visibility.Collapsed;
+            isEditMode = false;
+            editingProductId = null;
+        }
+
+        /// <summary>
+        /// Viser produkt oprettelse/redigering og skjuler homescreen
+        /// </summary>
+        private void ShowProductCreation()
+        {
+            ucHomeScreen.Visibility = Visibility.Collapsed;
+            gridProductCreation.Visibility = Visibility.Visible;
+            currentStep = 1;
+            UpdateStepUI();
+        }
+
+        /// <summary>
+        /// Start ny produkt oprettelse (kaldes fra HomeScreen)
+        /// </summary>
+        public void StartNewProductCreation()
+        {
+            isEditMode = false;
+            editingProductId = null;
+            txtEditMode.Visibility = Visibility.Collapsed;
+
+            // Ryd alle felter
+            RydFormular();
+
+            // Vis produkt oprettelse
+            ShowProductCreation();
+        }
+
+        /// <summary>
+        /// Rediger eksisterende produkt (kaldes fra HomeScreen)
+        /// </summary>
+        public void EditExistingProduct(int productId)
+        {
+            try
+            {
+                isEditMode = true;
+                editingProductId = productId;
+
+                // Vis edit mode i header
+                txtEditMode.Text = $"Redigering - Produkt ID: {productId}";
+                txtEditMode.Visibility = Visibility.Visible;
+
+                // Hent produkt data
+                var product = viewModel.GetProductById(productId);
+
+                // Udfyld felterne med eksisterende data
+                LoadProductDataIntoForm(product);
+
+                // Vis produkt oprettelse i edit mode
+                ShowProductCreation();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Fejl ved indlæsning af produkt: {ex.Message}", "Fejl", MessageBoxButton.OK, MessageBoxImage.Error);
+                ShowHomeScreen();
+            }
+        }
+
+        /// <summary>
+        /// Indlæser produkt data ind i formular felterne
+        /// </summary>
+        private void LoadProductDataIntoForm(Product product)
+        {
+            // Step 1 - Basis oplysninger
+            var trin1 = ucTrin1Basisoplysninger as Trin1BasisoplysningerView;
+            if (trin1 != null)
+            {
+                trin1.txtProduktNavn.Text = product.Name;
+                trin1.txtVareNummer.Text = product.DgaItemNo;
+                trin1.txtColiStoerrelseAntal.Text = product.ColiSize;
+
+                // Find og vælg dropdown værdier
+                SelectDropdownItem(trin1.cmbVaregruppe, product.ProductGroup);
+                SelectDropdownItem(trin1.cmbSaeson, product.Season);
+                SelectDropdownItem(trin1.cmbOprindelsesland, product.CountryOfOrigin);
+                SelectDropdownItem(trin1.cmbLeverandoer, product.Supplier);
+                SelectDropdownItem(trin1.cmbDesigner, product.Designer);
+                SelectDropdownItem(trin1.cmbBeskrivelse, product.Description);
+            }
+
+            // TODO: Load data for other steps when available
+        }
+
+        /// <summary>
+        /// Hjælpemetode til at vælge item i dropdown
+        /// </summary>
+        private void SelectDropdownItem(ComboBox comboBox, string value)
+        {
+            if (string.IsNullOrEmpty(value)) return;
+
+            foreach (var item in comboBox.Items)
+            {
+                if (item is ListeItem listeItem && listeItem.Navn == value)
+                {
+                    comboBox.SelectedItem = item;
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tilbage til homescreen knap
+        /// </summary>
+        private void btnBackToHome_Click(object sender, RoutedEventArgs e)
+        {
+            var result = MessageBox.Show("Er du sikker på at du vil gå tilbage? Ikke-gemte ændringer vil gå tabt.",
+                "Bekræft", MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                ShowHomeScreen();
+                ucHomeScreen.RefreshProductList();
+            }
+        }
+
+        /// <summary>
+        /// Annuller knap - går tilbage til homescreen
+        /// </summary>
+        private void btnAnnuller_Click(object sender, RoutedEventArgs e)
+        {
+            btnBackToHome_Click(sender, e);
         }
 
         /// <summary>
@@ -127,8 +263,12 @@ namespace ProduktOprettelse
             else
             {
                 // Sidste trin: Produktet er nu fuldført
-                MessageBox.Show("Produkt oprettet succesfuldt!", "Succes", MessageBoxButton.OK, MessageBoxImage.Information);
-                RydFormular();
+                string message = isEditMode ? "Produkt opdateret succesfuldt!" : "Produkt oprettet succesfuldt!";
+                MessageBox.Show(message, "Succes", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Gå tilbage til homescreen og opdater listen
+                ShowHomeScreen();
+                await ucHomeScreen.RefreshProductList();
             }
         }
 
@@ -177,9 +317,19 @@ namespace ProduktOprettelse
                 ProductGroup = GetSelectedItemName(basisOplysninger.SelectedVaregruppe)
             };
 
-            int productId = await viewModel.SaveStep1DataAsync(step1Data);
-
-            MessageBox.Show($"Trin 1 gemt. Produkt ID: {productId}", "Gemt", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (isEditMode && editingProductId.HasValue)
+            {
+                // I edit mode skal vi opdatere eksisterende produkt
+                // TODO: Implementer update metode i repository
+                MessageBox.Show("Produkt opdatering er under udvikling", "Info", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            else
+            {
+                // Opret nyt produkt
+                int productId = await viewModel.SaveStep1DataAsync(step1Data);
+                editingProductId = productId; // Gem ID for videre brug
+                MessageBox.Show($"Trin 1 gemt. Produkt ID: {productId}", "Gemt", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         /// <summary>
@@ -191,7 +341,7 @@ namespace ProduktOprettelse
 
             var step2Data = new Step2Dto
             {
-                ProductId = viewModel.CurrentProductId,
+                ProductId = editingProductId ?? viewModel.CurrentProductId,
                 Answers = new Dictionary<string, bool>()
             };
 
@@ -235,7 +385,7 @@ namespace ProduktOprettelse
 
             var step3Data = new Step3Dto
             {
-                ProductId = viewModel.CurrentProductId,
+                ProductId = editingProductId ?? viewModel.CurrentProductId,
                 SupplierProductNo = ParseIntSafely(obligatoriskeFelter.LeverandorProduktNr),
                 CustomerClearanceNo = ParseIntSafely(obligatoriskeFelter.CustomerClearanceNo),
                 CustomerClearancePercent = ParseDecimalSafely(obligatoriskeFelter.CustomerClearancePct),
@@ -272,7 +422,7 @@ namespace ProduktOprettelse
 
             var step4Data = new Step4Dto
             {
-                ProductId = viewModel.CurrentProductId,
+                ProductId = editingProductId ?? viewModel.CurrentProductId,
                 DgaColorGroupName = "Standard", // Map from your UI if available
                 DgaSalCatGroup = "General", // Map from your UI if available
                 PantonePantone = "N/A", // Map from your UI if available
@@ -376,16 +526,29 @@ namespace ProduktOprettelse
             try
             {
                 // Reset each step
+                (ucTrin1Basisoplysninger as Trin1BasisoplysningerView)?.txtProduktNavn.Clear();
+                (ucTrin1Basisoplysninger as Trin1BasisoplysningerView)?.txtVareNummer.Clear();
+                (ucTrin1Basisoplysninger as Trin1BasisoplysningerView)?.txtColiStoerrelseAntal.Clear();
+                if (ucTrin1Basisoplysninger is Trin1BasisoplysningerView trin1)
+                {
+                    trin1.cmbVaregruppe.SelectedIndex = -1;
+                    trin1.cmbSaeson.SelectedIndex = -1;
+                    trin1.cmbOprindelsesland.SelectedIndex = -1;
+                    trin1.cmbLeverandoer.SelectedIndex = -1;
+                    trin1.cmbDesigner.SelectedIndex = -1;
+                    trin1.cmbBeskrivelse.SelectedIndex = -1;
+                }
+
                 (ucTrin4ObligatoriskeFelter as Trin4ObligatoriskeFelterView)?.RydFelter();
 
                 // Reset to first step
                 currentStep = 1;
                 UpdateStepUI();
 
-                // Create new ViewModel instance to reset all data
-                viewModel = new ProduktViewModel();
-                this.DataContext = viewModel;
-                LoadDataAsync();
+                // Reset edit mode
+                isEditMode = false;
+                editingProductId = null;
+                txtEditMode.Visibility = Visibility.Collapsed;
             }
             catch (Exception ex)
             {
